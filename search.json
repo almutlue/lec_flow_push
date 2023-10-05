@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Project aim: Characterize LEC subtypes in skin and fat tissue from different patients.\nProject lead: Aline Bauer\nAnalysis lead: Salvatore Daniele Bianco"
+  },
+  {
+    "objectID": "code/shinycell.html",
+    "href": "code/shinycell.html",
+    "title": "shinycell",
+    "section": "",
+    "text": "library(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(zellkonverter)\nlibrary(SingleCellExperiment)\nlibrary(ShinyCell)\n\n\n\nsce$\n\nsce &lt;- readH5AD(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.h5ad\"), reader =\"R\")\n\n#saveRDS(sce, file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n\n#Annotate object\nsce$cell_types &lt;- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res\n\nsce &lt;- sce[, !sce$cell_types %in% c(\"6\", \"8\", \"9\", \"10\")]\n\nsce$cell_type_name &lt;- as.factor(sce$cell_types) |&gt; droplevels()\nlevels(sce$cell_type_name) &lt;- c(\"4 precollector2\", \"1 capillary1\", \"3 precollector1\", \"6 valve\", \"2 capillary2\", \"5 collector\", \"7 proliferative\")\n\nsce$cell_type_name &lt;- factor(sce$cell_type_name, levels = c(\"1 capillary1\", \"2 capillary2\", \"3 precollector1\", \"4 precollector2\", \"5 collector\", \"6 valve\", \"7 proliferative\"))\n\nreducedDims(sce)[\"umap\"] &lt;- reducedDims(sce)[\"logcounts.scaled.pca.harmony.neighbors.umap\"]\n\n\n\n\n\n\nscConf = createConfig(sce)\nmakeShinyApp(sce, scConf, gene.mapping = TRUE,\n             shiny.title = \"LECs different tissues\")"
+  },
+  {
+    "objectID": "code/shinycell.html#preamble",
+    "href": "code/shinycell.html#preamble",
+    "title": "shinycell",
+    "section": "",
+    "text": "library(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(zellkonverter)\nlibrary(SingleCellExperiment)\nlibrary(ShinyCell)\n\n\n\nsce$\n\nsce &lt;- readH5AD(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.h5ad\"), reader =\"R\")\n\n#saveRDS(sce, file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n\n#Annotate object\nsce$cell_types &lt;- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res\n\nsce &lt;- sce[, !sce$cell_types %in% c(\"6\", \"8\", \"9\", \"10\")]\n\nsce$cell_type_name &lt;- as.factor(sce$cell_types) |&gt; droplevels()\nlevels(sce$cell_type_name) &lt;- c(\"4 precollector2\", \"1 capillary1\", \"3 precollector1\", \"6 valve\", \"2 capillary2\", \"5 collector\", \"7 proliferative\")\n\nsce$cell_type_name &lt;- factor(sce$cell_type_name, levels = c(\"1 capillary1\", \"2 capillary2\", \"3 precollector1\", \"4 precollector2\", \"5 collector\", \"6 valve\", \"7 proliferative\"))\n\nreducedDims(sce)[\"umap\"] &lt;- reducedDims(sce)[\"logcounts.scaled.pca.harmony.neighbors.umap\"]"
+  },
+  {
+    "objectID": "code/shinycell.html#load-shinycell",
+    "href": "code/shinycell.html#load-shinycell",
+    "title": "shinycell",
+    "section": "",
+    "text": "scConf = createConfig(sce)\nmakeShinyApp(sce, scConf, gene.mapping = TRUE,\n             shiny.title = \"LECs different tissues\")"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "lec_fow_push",
+    "section": "",
+    "text": "Code and analysis related to the comparison of LEC subtypes from different tissue origins."
+  },
+  {
+    "objectID": "code/vis_de.html",
+    "href": "code/vis_de.html",
+    "title": "vis_de",
+    "section": "",
+    "text": "Libraries\n\nlibrary(scran)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(scuttle)\nlibrary(pheatmap)\nlibrary(patchwork)\nlibrary(EnhancedVolcano)\nlibrary(SingleCellExperiment)\nlibrary(gridExtra)\n\nHelper functions\n\n\nCode\n# volcano plot function as defined in https://github.com/HelenaLC/TLS-Silina/blob/main/code/geo-02-differential.qmd\n\n.volcano &lt;- \\(df, title, fdr = 0.05, lfc = 1, select_lab = NULL) {\n  EnhancedVolcano(df, \n    x = \"logFC\", y = \"PValue\",\n    FCcutoff = lfc, pCutoff = fdr,\n    selectLab = select_lab,\n    pointSize = 1.7, raster = TRUE,\n    title = title, subtitle = NULL,\n    lab = rownames(df), labSize = 4, \n    drawConnectors = TRUE, widthConnectors = 0.5) +\n  guides(col = guide_legend(override.aes = list(alpha = 1, size = 5))) +\n  theme_bw(9) + theme(\n    aspect.ratio = 1,\n    legend.title = element_blank(),\n    panel.grid.minor = element_blank())\n}\n\n\n\n\nThere are multiple DE comparisons that are potentially relevant:\n\nDE across all cells (not pseudobulk?) using edgeR with tissue, sample and cell type within the design formular (Daniele)\n\n\n\nde_all &lt;- read.csv(file.path(\"..\",\"out\", \"edger_all_no_pseudobulk.csv\"))\nrownames(de_all) &lt;- de_all$genes\n\nsce &lt;- readRDS(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n\n\n\n\n\n\n\n.volcano(df = de_all, title = \"Fat vs skin general\", fdr = 0.05, lfc = 0.75)\n\nWarning: One or more p-values is 0. Converting to 10^-1 * current lowest\nnon-zero p-value...\n\n\n\n\n\n\n\n\n\ntop &lt;- as.data.frame(de_all) %&gt;%\n    filter(PValue &lt; 0.0001) |&gt; \n    slice_max(abs(logFC), n = 40)\n\nsummed &lt;- aggregateAcrossCells(sce, \n                               id=colData(sce)[,c(\"tissue\", \"Sample\")],\n                               use.assay.type = \"counts\")\nrownames(summed) &lt;- gsub(\"^.*\\\\.\",\"\",rownames(summed))\nmtx_sub &lt;- assays(summed)[[\"counts\"]][rownames(top),]\ncolnames(mtx_sub) &lt;- summed$Sample\n    \ncd &lt;- data.frame(\"tissue\" = colData(summed)[,c(\"tissue\")])\nrownames(cd) &lt;- summed$Sample\nhm &lt;- pheatmap(mtx_sub, \n        main = \"non pseudobulk DE\", fontsize = 6,\n        col = rev(hcl.colors(51, \"RdBu\")),\n        scale = \"row\", \n        show_colnames = FALSE,\n        cluster_cols = FALSE,\n        annotation_col = cd)"
+  },
+  {
+    "objectID": "code/vis_de.html#preambel",
+    "href": "code/vis_de.html#preambel",
+    "title": "vis_de",
+    "section": "",
+    "text": "Libraries\n\nlibrary(scran)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(scuttle)\nlibrary(pheatmap)\nlibrary(patchwork)\nlibrary(EnhancedVolcano)\nlibrary(SingleCellExperiment)\nlibrary(gridExtra)\n\nHelper functions\n\n\nCode\n# volcano plot function as defined in https://github.com/HelenaLC/TLS-Silina/blob/main/code/geo-02-differential.qmd\n\n.volcano &lt;- \\(df, title, fdr = 0.05, lfc = 1, select_lab = NULL) {\n  EnhancedVolcano(df, \n    x = \"logFC\", y = \"PValue\",\n    FCcutoff = lfc, pCutoff = fdr,\n    selectLab = select_lab,\n    pointSize = 1.7, raster = TRUE,\n    title = title, subtitle = NULL,\n    lab = rownames(df), labSize = 4, \n    drawConnectors = TRUE, widthConnectors = 0.5) +\n  guides(col = guide_legend(override.aes = list(alpha = 1, size = 5))) +\n  theme_bw(9) + theme(\n    aspect.ratio = 1,\n    legend.title = element_blank(),\n    panel.grid.minor = element_blank())\n}\n\n\n\n\nThere are multiple DE comparisons that are potentially relevant:\n\nDE across all cells (not pseudobulk?) using edgeR with tissue, sample and cell type within the design formular (Daniele)\n\n\n\nde_all &lt;- read.csv(file.path(\"..\",\"out\", \"edger_all_no_pseudobulk.csv\"))\nrownames(de_all) &lt;- de_all$genes\n\nsce &lt;- readRDS(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))"
+  },
+  {
+    "objectID": "code/vis_de.html#visualizations",
+    "href": "code/vis_de.html#visualizations",
+    "title": "vis_de",
+    "section": "",
+    "text": ".volcano(df = de_all, title = \"Fat vs skin general\", fdr = 0.05, lfc = 0.75)\n\nWarning: One or more p-values is 0. Converting to 10^-1 * current lowest\nnon-zero p-value...\n\n\n\n\n\n\n\n\n\ntop &lt;- as.data.frame(de_all) %&gt;%\n    filter(PValue &lt; 0.0001) |&gt; \n    slice_max(abs(logFC), n = 40)\n\nsummed &lt;- aggregateAcrossCells(sce, \n                               id=colData(sce)[,c(\"tissue\", \"Sample\")],\n                               use.assay.type = \"counts\")\nrownames(summed) &lt;- gsub(\"^.*\\\\.\",\"\",rownames(summed))\nmtx_sub &lt;- assays(summed)[[\"counts\"]][rownames(top),]\ncolnames(mtx_sub) &lt;- summed$Sample\n    \ncd &lt;- data.frame(\"tissue\" = colData(summed)[,c(\"tissue\")])\nrownames(cd) &lt;- summed$Sample\nhm &lt;- pheatmap(mtx_sub, \n        main = \"non pseudobulk DE\", fontsize = 6,\n        col = rev(hcl.colors(51, \"RdBu\")),\n        scale = \"row\", \n        show_colnames = FALSE,\n        cluster_cols = FALSE,\n        annotation_col = cd)"
+  }
+]
