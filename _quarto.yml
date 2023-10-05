@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "lec_flow_push"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - text: "Differential expression"
+        menu:
+          - code/vis_de.qmd
+      - text: "Interactively"
+        menu:
+          - code/shinycell.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
