@@ -2,8 +2,8 @@
 title: "About"
 ---
 
-About this site
+Project aim: Characterize LEC subtypes in skin and fat tissue from different patients.
 
-```{r}
-1 + 1
-```
+Project lead: Aline Bauer
+
+Analysis lead: Salvatore Daniele Bianco
