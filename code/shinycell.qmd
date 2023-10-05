@@ -1,0 +1,58 @@
+---
+title: "shinycell"
+---
+
+# Interactively explore single cell data
+
+## Preamble
+
+```{r}
+#| label: load-libs
+#| echo: true
+#| output: false
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(zellkonverter)
+library(SingleCellExperiment)
+library(ShinyCell)
+```
+
+### Load data objects
+
+sce\$
+
+```{r}
+#| label: data
+#| warning: false
+
+sce <- readH5AD(file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.h5ad"), reader ="R")
+
+#saveRDS(sce, file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.rds"))
+
+
+#Annotate object
+sce$cell_types <- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res
+
+sce <- sce[, !sce$cell_types %in% c("6", "8", "9", "10")]
+
+sce$cell_type_name <- as.factor(sce$cell_types) |> droplevels()
+levels(sce$cell_type_name) <- c("4 precollector2", "1 capillary1", "3 precollector1", "6 valve", "2 capillary2", "5 collector", "7 proliferative")
+
+sce$cell_type_name <- factor(sce$cell_type_name, levels = c("1 capillary1", "2 capillary2", "3 precollector1", "4 precollector2", "5 collector", "6 valve", "7 proliferative"))
+
+reducedDims(sce)["umap"] <- reducedDims(sce)["logcounts.scaled.pca.harmony.neighbors.umap"]
+
+```
+
+## Load ShinyCell
+
+```{r}
+#| label: call ShinyCell
+scConf = createConfig(sce)
+makeShinyApp(sce, scConf, gene.mapping = TRUE,
+             shiny.title = "LECs different tissues") 
+
+
+```

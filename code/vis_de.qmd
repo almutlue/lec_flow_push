@@ -1,0 +1,109 @@
+---
+title: "vis_de"
+---
+
+# Visualize DE results
+
+## Preambel
+
+Libraries
+
+```{r}
+#| label: load-libs
+#| echo: true
+#| output: false
+
+library(scran)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scuttle)
+library(pheatmap)
+library(patchwork)
+library(EnhancedVolcano)
+library(SingleCellExperiment)
+library(gridExtra)
+```
+
+Helper functions
+
+```{r}
+#| label: plot fun
+#| code-fold: true
+
+# volcano plot function as defined in https://github.com/HelenaLC/TLS-Silina/blob/main/code/geo-02-differential.qmd
+
+.volcano <- \(df, title, fdr = 0.05, lfc = 1, select_lab = NULL) {
+  EnhancedVolcano(df, 
+    x = "logFC", y = "PValue",
+    FCcutoff = lfc, pCutoff = fdr,
+    selectLab = select_lab,
+    pointSize = 1.7, raster = TRUE,
+    title = title, subtitle = NULL,
+    lab = rownames(df), labSize = 4, 
+    drawConnectors = TRUE, widthConnectors = 0.5) +
+  guides(col = guide_legend(override.aes = list(alpha = 1, size = 5))) +
+  theme_bw(9) + theme(
+    aspect.ratio = 1,
+    legend.title = element_blank(),
+    panel.grid.minor = element_blank())
+}
+
+```
+
+### Data objects
+
+There are multiple DE comparisons that are potentially relevant:
+
+1.  DE across all cells (not pseudobulk?) using edgeR with tissue, sample and cell type within the design formular (Daniele)
+
+2.  
+
+```{r}
+#| label: data 
+
+de_all <- read.csv(file.path("..","out", "edger_all_no_pseudobulk.csv"))
+rownames(de_all) <- de_all$genes
+
+sce <- readRDS(file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.rds"))
+
+```
+
+## Visualizations
+
+### Volcano(s)
+
+```{r}
+
+.volcano(df = de_all, title = "Fat vs skin general", fdr = 0.05, lfc = 0.75)
+```
+
+### Heatmaps
+
+```{r}
+#| label: heatmap
+
+top <- as.data.frame(de_all) %>%
+    filter(PValue < 0.0001) |> 
+    slice_max(abs(logFC), n = 40)
+
+summed <- aggregateAcrossCells(sce, 
+                               id=colData(sce)[,c("tissue", "Sample")],
+                               use.assay.type = "counts")
+rownames(summed) <- gsub("^.*\\.","",rownames(summed))
+mtx_sub <- assays(summed)[["counts"]][rownames(top),]
+colnames(mtx_sub) <- summed$Sample
+    
+cd <- data.frame("tissue" = colData(summed)[,c("tissue")])
+rownames(cd) <- summed$Sample
+hm <- pheatmap(mtx_sub, 
+        main = "non pseudobulk DE", fontsize = 6,
+        col = rev(hcl.colors(51, "RdBu")),
+        scale = "row", 
+        show_colnames = FALSE,
+        cluster_cols = FALSE,
+        annotation_col = cd)
+
+
+
+```
