@@ -23,7 +23,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "lec_fow_push",
+    "title": "lec_flow_push",
     "section": "",
     "text": "Code and analysis related to the comparison of LEC subtypes from different tissue origins."
   },
@@ -32,21 +32,21 @@
     "href": "code/shinycell.html",
     "title": "shinycell",
     "section": "",
-    "text": "library(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(zellkonverter)\nlibrary(SingleCellExperiment)\nlibrary(ShinyCell)\n\n\n\nsce$\n\nsce &lt;- readH5AD(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.h5ad\"), reader =\"R\")\n\n#saveRDS(sce, file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n\n#Annotate object\nsce$cell_types &lt;- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res\n\nsce &lt;- sce[, !sce$cell_types %in% c(\"6\", \"8\", \"9\", \"10\")]\n\nsce$cell_type_name &lt;- as.factor(sce$cell_types) |&gt; droplevels()\nlevels(sce$cell_type_name) &lt;- c(\"4 precollector2\", \"1 capillary1\", \"3 precollector1\", \"6 valve\", \"2 capillary2\", \"5 collector\", \"7 proliferative\")\n\nsce$cell_type_name &lt;- factor(sce$cell_type_name, levels = c(\"1 capillary1\", \"2 capillary2\", \"3 precollector1\", \"4 precollector2\", \"5 collector\", \"6 valve\", \"7 proliferative\"))\n\nreducedDims(sce)[\"umap\"] &lt;- reducedDims(sce)[\"logcounts.scaled.pca.harmony.neighbors.umap\"]\n\n\n\n\n\n\nscConf = createConfig(sce)\nmakeShinyApp(sce, scConf, gene.mapping = TRUE,\n             shiny.title = \"LECs different tissues\")"
+    "text": "library(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(zellkonverter)\nlibrary(SingleCellExperiment)\nlibrary(ShinyCell)\n\n\n\n\nsce &lt;- readH5AD(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.h5ad\"), reader =\"R\")\n\nsce_pre &lt;- readRDS(file.path(\"..\", \"data\", \"0.2-sce-after-contamination-removal.rds\"))\n\n#saveRDS(sce, file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n#Annotate object\nsce$cell_types &lt;- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res\n\nsce &lt;- sce[, !sce$cell_types %in% c(\"6\", \"8\", \"9\", \"10\")]\n\nsce$cell_type_name &lt;- as.factor(sce$cell_types) |&gt; droplevels()\nlevels(sce$cell_type_name) &lt;- c(\"4 precollector2\", \"1 capillary1\", \"3 precollector1\", \"6 valve\", \"2 capillary2\", \"5 collector\", \"7 proliferative\")\n\nsce$cell_type_name &lt;- factor(sce$cell_type_name, levels = c(\"1 capillary1\", \"2 capillary2\", \"3 precollector1\", \"4 precollector2\", \"5 collector\", \"6 valve\", \"7 proliferative\"))\n\nreducedDims(sce)[\"umap\"] &lt;- reducedDims(sce)[\"logcounts.scaled.pca.harmony.neighbors.umap\"]\n\n# Add relevant metadata to unfiltered sce\nsce_pre &lt;- sce_pre[, colnames(sce)]\ncolData(sce_pre) &lt;- colData(sce)\nreducedDims(sce_pre) &lt;- reducedDims(sce)\n\n\n\n\n\n\nscConf = createConfig(sce_pre)\nmakeShinyApp(sce_pre, scConf, gene.mapping = TRUE,\n             shiny.title = \"LECs different tissues\")"
   },
   {
     "objectID": "code/shinycell.html#preamble",
     "href": "code/shinycell.html#preamble",
     "title": "shinycell",
     "section": "",
-    "text": "library(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(zellkonverter)\nlibrary(SingleCellExperiment)\nlibrary(ShinyCell)\n\n\n\nsce$\n\nsce &lt;- readH5AD(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.h5ad\"), reader =\"R\")\n\n#saveRDS(sce, file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n\n#Annotate object\nsce$cell_types &lt;- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res\n\nsce &lt;- sce[, !sce$cell_types %in% c(\"6\", \"8\", \"9\", \"10\")]\n\nsce$cell_type_name &lt;- as.factor(sce$cell_types) |&gt; droplevels()\nlevels(sce$cell_type_name) &lt;- c(\"4 precollector2\", \"1 capillary1\", \"3 precollector1\", \"6 valve\", \"2 capillary2\", \"5 collector\", \"7 proliferative\")\n\nsce$cell_type_name &lt;- factor(sce$cell_type_name, levels = c(\"1 capillary1\", \"2 capillary2\", \"3 precollector1\", \"4 precollector2\", \"5 collector\", \"6 valve\", \"7 proliferative\"))\n\nreducedDims(sce)[\"umap\"] &lt;- reducedDims(sce)[\"logcounts.scaled.pca.harmony.neighbors.umap\"]"
+    "text": "library(dplyr)\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(zellkonverter)\nlibrary(SingleCellExperiment)\nlibrary(ShinyCell)\n\n\n\n\nsce &lt;- readH5AD(file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.h5ad\"), reader =\"R\")\n\nsce_pre &lt;- readRDS(file.path(\"..\", \"data\", \"0.2-sce-after-contamination-removal.rds\"))\n\n#saveRDS(sce, file.path(\"..\", \"data\", \"1.1-sce-after-contamination-removal-integration-clustering.rds\"))\n\n#Annotate object\nsce$cell_types &lt;- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res\n\nsce &lt;- sce[, !sce$cell_types %in% c(\"6\", \"8\", \"9\", \"10\")]\n\nsce$cell_type_name &lt;- as.factor(sce$cell_types) |&gt; droplevels()\nlevels(sce$cell_type_name) &lt;- c(\"4 precollector2\", \"1 capillary1\", \"3 precollector1\", \"6 valve\", \"2 capillary2\", \"5 collector\", \"7 proliferative\")\n\nsce$cell_type_name &lt;- factor(sce$cell_type_name, levels = c(\"1 capillary1\", \"2 capillary2\", \"3 precollector1\", \"4 precollector2\", \"5 collector\", \"6 valve\", \"7 proliferative\"))\n\nreducedDims(sce)[\"umap\"] &lt;- reducedDims(sce)[\"logcounts.scaled.pca.harmony.neighbors.umap\"]\n\n# Add relevant metadata to unfiltered sce\nsce_pre &lt;- sce_pre[, colnames(sce)]\ncolData(sce_pre) &lt;- colData(sce)\nreducedDims(sce_pre) &lt;- reducedDims(sce)"
   },
   {
     "objectID": "code/shinycell.html#load-shinycell",
     "href": "code/shinycell.html#load-shinycell",
     "title": "shinycell",
     "section": "",
-    "text": "scConf = createConfig(sce)\nmakeShinyApp(sce, scConf, gene.mapping = TRUE,\n             shiny.title = \"LECs different tissues\")"
+    "text": "scConf = createConfig(sce_pre)\nmakeShinyApp(sce_pre, scConf, gene.mapping = TRUE,\n             shiny.title = \"LECs different tissues\")"
   },
   {
     "objectID": "code/vis_de.html",
