@@ -2,18 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/about.html</loc>
-    <lastmod>2023-10-05T11:39:39.904Z</lastmod>
+    <lastmod>2023-10-10T12:23:25.683Z</lastmod>
   </url>
   <url>
-    <loc>https://almutlue.github.io/lec_flow_push/code/shinycell.html</loc>
-    <lastmod>2023-10-05T11:39:25.903Z</lastmod>
+    <loc>https://almutlue.github.io/lec_flow_push/code/convert_to_adata.html</loc>
+    <lastmod>2023-10-10T12:23:10.871Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/preprocessing_n_removal.html</loc>
+    <lastmod>2023-10-10T12:22:47.835Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/index.html</loc>
-    <lastmod>2023-10-05T11:39:04.083Z</lastmod>
+    <lastmod>2023-10-10T12:22:39.226Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/shinycell.html</loc>
+    <lastmod>2023-10-10T12:23:10.531Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/vis_de.html</loc>
-    <lastmod>2023-10-05T11:39:39.696Z</lastmod>
+    <lastmod>2023-10-10T12:23:25.483Z</lastmod>
   </url>
 </urlset>
