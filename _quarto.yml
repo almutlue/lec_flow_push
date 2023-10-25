@@ -8,6 +8,9 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
+      - text: "preprocessing"
+        menu:
+          - code/preprocessing_n_removal.ipynb
       - text: "Differential expression"
         menu:
           - code/vis_de.qmd

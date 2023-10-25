@@ -1,5 +1,7 @@
 ---
 title: "vis_de"
+format: html
+editor: visual
 ---
 
 # Visualize DE results
@@ -19,9 +21,11 @@ library(tidyr)
 library(ggplot2)
 library(scuttle)
 library(pheatmap)
+library(ComplexHeatmap)
 library(patchwork)
 library(EnhancedVolcano)
 library(SingleCellExperiment)
+library(stringr)
 library(gridExtra)
 ```
 
@@ -35,7 +39,7 @@ Helper functions
 
 .volcano <- \(df, title, fdr = 0.05, lfc = 1, select_lab = NULL) {
   EnhancedVolcano(df, 
-    x = "logFC", y = "PValue",
+    x = "logFC", y = "FDR",
     FCcutoff = lfc, pCutoff = fdr,
     selectLab = select_lab,
     pointSize = 1.7, raster = TRUE,
@@ -53,20 +57,27 @@ Helper functions
 
 ### Data objects
 
-There are multiple DE comparisons that are potentially relevant:
-
-1.  DE across all cells (not pseudobulk?) using edgeR with tissue, sample and cell type within the design formular (Daniele)
-
-2.  
-
 ```{r}
 #| label: data 
+pb_de_files <- list.files("../out/de/20231024", pattern = ".csv", full.names = T)
+pb_de_names <- list.files("../out/de/20231024", pattern = ".csv", full.names = F)
+pb_de <- lapply(pb_de_files, read.csv, row.names=1)
+names(pb_de) <- gsub("\\.csv","",pb_de_names)
+pb_de_names
 
-de_all <- read.csv(file.path("..","out", "edger_all_no_pseudobulk.csv"))
-rownames(de_all) <- de_all$genes
+sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
 
-sce <- readRDS(file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.rds"))
+#list to map de names to cell type names
+ct_nam <- list("cap_pseudo_bulk" = c("capillary"),
+               "precoll_pseudo_bulk" = c("precollector"),
+               "valves_pseudo_bulk" = c("valve"))
 
+sce$ct_broad <- sce$cell_type_name |> forcats::fct_collapse(
+  "capillary" = c("1 capillary1", "2 capillary2"),
+  "precollector" = c("3 precollector1", "4 precollector2"),
+  "collector" = c("5 collector"),
+  "valve" = c("6 valve"),
+  "prolieferative" = c("7 proliferative"))
 ```
 
 ## Visualizations
@@ -74,36 +85,116 @@ sce <- readRDS(file.path("..", "data", "1.1-sce-after-contamination-removal-inte
 ### Volcano(s)
 
 ```{r}
+#| label: volcano
+#| echo: true
+#| eval: false
+#| #| code-fold: true
 
-.volcano(df = de_all, title = "Fat vs skin general", fdr = 0.05, lfc = 0.75)
+for (. in names(pb_de)) {
+    p <- .volcano(df = pb_de[[.]], title = ., fdr = 0.05, lfc = 0.75)
+    cat("####", ., "\n"); print(p); cat("\n\n")
+}
+
 ```
 
-### Heatmaps
+::: panel-tabset
+
+```{r}
+#| results: asis
+#| label: volcano tab
+
+for (. in names(pb_de)) {
+    p <- .volcano(df = pb_de[[.]], title = ., fdr = 0.05, lfc = 0.75)
+    cat("####", ., "\n"); print(p); cat("\n\n")
+}
+
+```
+
+:::
+
+### Pseudobulk Heatmap
 
 ```{r}
 #| label: heatmap
+#| eval: false
+#| echo: true
+#| code-fold: true
 
-top <- as.data.frame(de_all) %>%
-    filter(PValue < 0.0001) |> 
-    slice_max(abs(logFC), n = 40)
-
-summed <- aggregateAcrossCells(sce, 
-                               id=colData(sce)[,c("tissue", "Sample")],
+sce_sub <- sce[,!sce$tissue %in% "mixed"]
+summed <- aggregateAcrossCells(sce_sub, 
+                               id=colData(sce_sub)[,c("tissue", "ct_broad", "donor")],
                                use.assay.type = "counts")
 rownames(summed) <- gsub("^.*\\.","",rownames(summed))
-mtx_sub <- assays(summed)[["counts"]][rownames(top),]
-colnames(mtx_sub) <- summed$Sample
-    
-cd <- data.frame("tissue" = colData(summed)[,c("tissue")])
-rownames(cd) <- summed$Sample
-hm <- pheatmap(mtx_sub, 
-        main = "non pseudobulk DE", fontsize = 6,
+
+# subset res to de-genes
+de_list <- lapply(pb_de, function(.){
+  top <- as.data.frame(.) |> 
+      filter(FDR < 0.01) |> 
+      slice_max(abs(logFC), n = 20)
+}) 
+
+drop_ind <- which(sapply(de_list, nrow) < 1)
+drop_ind2 <- which(names(de_list) %in% "DEA")
+de_gen_list <- de_list[-c(drop_ind, drop_ind2)]
+
+for (. in names(de_gen_list)) {
+    sub <- summed[,colData(summed)$ct_broad %in% ct_nam[[.]]]
+    mtx_sub <- log1p(assays(sub)[["counts"]][rownames(de_gen_list[[.]]),])
+    colnames(mtx_sub) <- paste0("pseudobulk_", seq_along(1:ncol(sub)))
+    cd <- data.frame("tissue" = sub$tissue)
+    rownames(cd) <- colnames(mtx_sub)
+    hm <- pheatmap(mtx_sub, 
+        main = ., fontsize = 6,
         col = rev(hcl.colors(51, "RdBu")),
         scale = "row", 
         show_colnames = FALSE,
         cluster_cols = FALSE,
         annotation_col = cd)
-
-
+    cat("####", ., "\n"); draw(hm); cat("\n\n")
+}
 
 ```
+
+::: panel-tabset
+
+```{r}
+#| results: asis
+#| label: heatmap tab
+
+sce_sub <- sce[,!sce$tissue %in% "mixed"]
+summed <- aggregateAcrossCells(sce_sub, 
+                               id=colData(sce_sub)[,c("tissue", "ct_broad", "donor")],
+                               use.assay.type = "counts")
+rownames(summed) <- gsub("^.*\\.","",rownames(summed))
+
+# subset res to de-genes
+de_list <- lapply(pb_de, function(.){
+  top <- as.data.frame(.) |> 
+      filter(FDR < 0.01) |> 
+      slice_max(abs(logFC), n = 20)
+}) 
+
+drop_ind <- which(sapply(de_list, nrow) < 1)
+drop_ind2 <- which(names(de_list) %in% "DEA")
+de_gen_list <- de_list[-c(drop_ind, drop_ind2)]
+
+for (. in names(de_gen_list)) {
+    sub <- summed[,colData(summed)$ct_broad %in% ct_nam[[.]]]
+    mtx_sub <- log1p(assays(sub)[["counts"]][rownames(de_gen_list[[.]]),])
+    colnames(mtx_sub) <- paste0("pseudobulk_", seq_along(1:ncol(sub)))
+    cd <- data.frame("tissue" = sub$tissue)
+    rownames(cd) <- colnames(mtx_sub)
+    hm <- pheatmap(mtx_sub, 
+        main = ., fontsize = 6,
+        col = rev(hcl.colors(51, "RdBu")),
+        scale = "row", 
+        show_colnames = FALSE,
+        cluster_cols = FALSE,
+        annotation_col = cd)
+    cat("####", ., "\n"); draw(hm); cat("\n\n")
+}
+
+```
+
+:::
+

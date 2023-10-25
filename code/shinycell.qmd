@@ -21,16 +21,15 @@ library(ShinyCell)
 
 ### Load data objects
 
-sce\$
-
 ```{r}
 #| label: data
 #| warning: false
 
 sce <- readH5AD(file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.h5ad"), reader ="R")
 
-#saveRDS(sce, file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.rds"))
+sce_pre <- readRDS(file.path("..", "data", "0.2-sce-after-contamination-removal.rds"))
 
+#saveRDS(sce, file.path("..", "data", "1.1-sce-after-contamination-removal-integration-clustering.rds"))
 
 #Annotate object
 sce$cell_types <- sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res
@@ -44,14 +43,21 @@ sce$cell_type_name <- factor(sce$cell_type_name, levels = c("1 capillary1", "2 c
 
 reducedDims(sce)["umap"] <- reducedDims(sce)["logcounts.scaled.pca.harmony.neighbors.umap"]
 
+# Add relevant metadata to unfiltered sce
+sce_pre <- sce_pre[, colnames(sce)]
+colData(sce_pre) <- colData(sce)
+reducedDims(sce_pre) <- reducedDims(sce)
+
+saveRDS(sce_pre, file.path("..", "data", "sce_all_metadata_genes.rds"))
+
 ```
 
 ## Load ShinyCell
 
 ```{r}
 #| label: call ShinyCell
-scConf = createConfig(sce)
-makeShinyApp(sce, scConf, gene.mapping = TRUE,
+scConf = createConfig(sce_pre)
+makeShinyApp(sce_pre, scConf, gene.mapping = TRUE,
              shiny.title = "LECs different tissues") 
 
 
