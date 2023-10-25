@@ -22,6 +22,7 @@ library(ggplot2)
 library(scuttle)
 library(pheatmap)
 library(ComplexHeatmap)
+library(UpSetR)
 library(patchwork)
 library(EnhancedVolcano)
 library(SingleCellExperiment)
@@ -63,7 +64,7 @@ pb_de_files <- list.files("../out/de/20231024", pattern = ".csv", full.names = T
 pb_de_names <- list.files("../out/de/20231024", pattern = ".csv", full.names = F)
 pb_de <- lapply(pb_de_files, read.csv, row.names=1)
 names(pb_de) <- gsub("\\.csv","",pb_de_names)
-pb_de_names
+names(pb_de)
 
 sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
 
@@ -170,8 +171,8 @@ rownames(summed) <- gsub("^.*\\.","",rownames(summed))
 # subset res to de-genes
 de_list <- lapply(pb_de, function(.){
   top <- as.data.frame(.) |> 
-      filter(FDR < 0.01) |> 
-      slice_max(abs(logFC), n = 20)
+      filter(FDR < 0.05) |> 
+      slice_max(abs(logFC), n = 30)
 }) 
 
 drop_ind <- which(sapply(de_list, nrow) < 1)
@@ -182,7 +183,8 @@ for (. in names(de_gen_list)) {
     sub <- summed[,colData(summed)$ct_broad %in% ct_nam[[.]]]
     mtx_sub <- log1p(assays(sub)[["counts"]][rownames(de_gen_list[[.]]),])
     colnames(mtx_sub) <- paste0("pseudobulk_", seq_along(1:ncol(sub)))
-    cd <- data.frame("tissue" = sub$tissue)
+    cd <- data.frame("tissue" = sub$tissue,
+                     "donor" = sub$donor)
     rownames(cd) <- colnames(mtx_sub)
     hm <- pheatmap(mtx_sub, 
         main = ., fontsize = 6,
@@ -197,4 +199,19 @@ for (. in names(de_gen_list)) {
 ```
 
 :::
+
+### UpSet plot
+
+```{r}
+#| label: upset
+
+upset_list <- lapply(pb_de, function(de_res){
+  de_res <- de_res |> 
+    filter(FDR < 0.05 & abs(logFC) > 0.75)
+  rownames(de_res)
+})
+
+upset(fromList(upset_list), order.by = "freq")
+
+```
 
