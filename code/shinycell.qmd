@@ -1,5 +1,6 @@
 ---
 title: "shinycell"
+author: "Almut Lütge"
 ---
 
 # Interactively explore single cell data

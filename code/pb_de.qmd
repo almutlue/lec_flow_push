@@ -1,0 +1,101 @@
+---
+title: "pb_de"
+author: "Almut Lütge"
+---
+
+## Differential expression analysis
+
+Pseudobulk DE analysis on major cell types using edgeR
+
+### Preamble
+
+```{r}
+#| label: load-libs
+#| echo: true
+#| output: false
+
+library(scran)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(edgeR)
+library(stringr)
+library(SingleCellExperiment)
+
+```
+
+### Data
+
+```{r}
+#| label: data 
+sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
+meta_dat <- read.csv(file.path("..", "data", "metadata.csv"),
+                     sep = "\t", row.names = 1)
+
+# major celltypes
+sce$ct_broad <- sce$cell_type_name |> forcats::fct_collapse(
+  "capillary" = c("1 capillary1", "2 capillary2"),
+  "precollector" = c("3 precollector1", "4 precollector2"),
+  "collector" = c("5 collector"),
+  "valve" = c("6 valve"),
+  "prolieferative" = c("7 proliferative"))
+
+# filter sample
+sce <- sce[, !sce$donor %in% c("2.0", "5.0")]
+sce$donor <- sce$donor |> droplevels()
+sce$tissue <- sce$tissue |> droplevels()
+
+```
+
+### Pseudobulk DE
+
+```{r}
+#| label: pb de
+
+summed <- aggregateAcrossCells(sce,
+                               id=colData(sce)[,c("ct_broad", "donor", "tissue")])
+# filter min cells
+summed.filt <- summed[,summed$ncells >= 10]
+print(table(summed.filt$tissue, summed.filt$ct_broad))
+  
+# de
+design <- model.matrix(~ donor + tissue, as.data.frame(colData(summed.filt)))
+de.results <- pseudoBulkDGE(summed.filt, 
+    label=summed.filt$ct_broad,
+    design=~donor + tissue,
+    coef="tissueskin",
+    condition=summed.filt$tissue 
+)
+
+is.de <- decideTestsPerLabel(de.results, threshold=0.05)
+summarizeTestsPerLabel(is.de)
+```
+
+### Pseudobulk DE all
+
+```{r}
+#| label: pb all
+summed_all <- aggregateAcrossCells(sce,
+                               id=colData(sce)[,c("donor", "tissue")])
+# filter min cells
+summed_all.filt <- summed_all[,summed_all$ncells >= 10]
+table(summed_all.filt$tissue)
+  
+# de
+design <- model.matrix(~ donor + tissue, as.data.frame(colData(summed_all.filt)))
+dgl <- DGEList(counts(summed_all.filt))
+dgl <- calcNormFactors(dgl)
+dgl <- estimateDisp(dgl, design)
+fit <- glmQLFit(dgl, design)
+de <- glmQLFTest(fit, coef="tissueskin")
+
+tt <- topTags(de, n = Inf)$table
+tt$full_gene_name <- rownames(tt)
+tt$gene_symbol <- gsub("^.*\\.","",rownames(tt))
+
+saveRDS(tt, file.path("..", "out", "de", "pb_all.rds"))
+write.csv(tt, file.path("..", "out", "de", "pb_all.csv"))
+
+
+
+```

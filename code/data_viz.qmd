@@ -1,0 +1,148 @@
+---
+title: "data_viz"
+author: "Almut Lütge"
+---
+
+## Data viz
+
+Different ways to look at the preprocessed dataset
+
+### Preamble
+
+```{r}
+#| label: load-libs
+#| echo: true
+#| output: false
+
+library(scran)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scuttle)
+library(scater)
+library(patchwork)
+library(SingleCellExperiment)
+library(stringr)
+library(gridExtra)
+```
+
+### Data
+
+```{r}
+#| label: data
+sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
+meta_dat <- read.csv(file.path("..", "data", "metadata.csv"),
+                     sep = "\t", row.names = 1)
+
+# major celltypes
+sce$ct_broad <- sce$cell_type_name |> forcats::fct_collapse(
+  "capillary" = c("1 capillary1", "2 capillary2"),
+  "precollector" = c("3 precollector1", "4 precollector2"),
+  "collector" = c("5 collector"),
+  "valve" = c("6 valve"),
+  "prolieferative" = c("7 proliferative"))
+
+
+#colours to correspond to shinycell
+cList = list("cell_type_name" = c("#A6CEE3","#99CD91","#B89B74",
+                                  "#F06C45","#ED8F47","#825D99","#B15928"),
+             "tissue" = c("#A6CEE3","#F06C45","#B15928"),
+             "donor" = c("#A6CEE3","#99CD91","#B89B74",
+                         "#F06C45","#ED8F47","#825D99","#B15928"))
+names(cList[["cell_type_name"]]) <- c("1 capillary1","2 capillary2","3 precollector1","4 precollector2","5 collector","6 valve","7 proliferative")
+names(cList[["tissue"]]) <- c("fat","mixed","skin")
+names(cList[["donor"]]) <- c("1.0","2.0","3.0","4.0","5.0","6.0","7.0")
+
+```
+
+#### cells per ct
+
+```{r}
+table(sce$tissue)
+table(sce$donor)
+table(sce$cell_type_name)
+table(sce$ct_broad)
+table(sce$ct_broad, sce$tissue)
+```
+
+### Data viz
+
+#### Umap split by tissue
+
+```{r, fig.width=9, fig.height=4}
+#| label: umap tissue
+
+sce_fat <- sce[,sce$tissue %in% "fat"]
+sce_skin <- sce[,sce$tissue %in% "skin"]
+sce_mixed <- sce[,sce$tissue %in% "mixed"]
+
+p1 <- plotReducedDim(sce_fat, dimred="umap", 
+                     colour_by="cell_type_name", 
+                     point_size = 0.8) +
+  ggtitle("fat") +
+  scale_color_manual(values = cList[["cell_type_name"]])
+
+p2 <- plotReducedDim(sce_skin, dimred="umap", 
+                     colour_by="cell_type_name", 
+                     point_size = 0.8) +
+  ggtitle("skin") +
+  scale_color_manual(values = cList[["cell_type_name"]])
+p3 <- plotReducedDim(sce_mixed, dimred="umap", 
+                     colour_by="cell_type_name", 
+                     point_size = 0.8) +
+  ggtitle("mixed") +
+  scale_color_manual(values = cList[["cell_type_name"]])
+
+
+wrap_plots(list("skin" = p2,
+                "mixed" = p3,
+                "fat" = p1), nrow = 1) + 
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+
+
+```
+
+#### Umap before after integration
+
+```{r, fig.width=8, fig.height=5}
+#| label: umap int
+
+no_int <- calculateUMAP(reducedDims(sce)[["logcounts.scaled.pca"]],transposed = T)
+reducedDims(sce)[["logcounts.scaled.umap"]] <- no_int
+
+
+p1 <- plotReducedDim(sce, dimred="umap", colour_by="donor", point_size = 0.8) +
+  ggtitle("after") +
+  scale_color_manual(values = cList[["donor"]])
+p2 <- plotReducedDim(sce, dimred="logcounts.scaled.umap", colour_by="donor", point_size = 0.8) +
+  ggtitle("before") +
+  scale_color_manual(values = cList[["donor"]])
+
+
+wrap_plots(list("before" = p2,
+                "after" = p1), nrow = 1) + 
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+
+
+```
+
+##### coloured by tissue
+
+```{r}
+#| label: umap int tissue
+
+p1 <- plotReducedDim(sce, dimred="umap", colour_by="tissue", point_size = 0.8) +
+  ggtitle("after") +
+  scale_color_manual(values = cList[["tissue"]])
+p2 <- plotReducedDim(sce, dimred="logcounts.scaled.umap", colour_by="tissue", point_size = 0.8) +
+  ggtitle("before") +
+  scale_color_manual(values = cList[["tissue"]])
+
+
+wrap_plots(list("before" = p2,
+                "after" = p1), nrow = 1) + 
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```

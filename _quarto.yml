@@ -14,9 +14,13 @@ website:
       - text: "Differential expression"
         menu:
           - code/vis_de.qmd
+          - code/pb_de.qmd
       - text: "Interactively"
         menu:
           - code/shinycell.qmd
+      - text: "Exploratory data analysis"
+        menu:
+          - code/data_viz.qmd
 
 format:
   html:

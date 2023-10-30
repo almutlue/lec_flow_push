@@ -1,5 +1,6 @@
 ---
 title: "vis_de"
+author: "Almut Lütge"
 format: html
 editor: visual
 ---
@@ -20,6 +21,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(scuttle)
+library(scater)
 library(pheatmap)
 library(ComplexHeatmap)
 library(UpSetR)
@@ -66,7 +68,16 @@ pb_de <- lapply(pb_de_files, read.csv, row.names=1)
 names(pb_de) <- gsub("\\.csv","",pb_de_names)
 names(pb_de)
 
+pb_all <- readRDS("../out/de/pb_all.rds")
+pb_all$gene_symbol[duplicated(pb_all$gene_symbol)] <- pb_all$full_gene_name[duplicated(pb_all$gene_symbol)]
+rownames(pb_all) <- pb_all$gene_symbol
+pb_de[["all"]] <- pb_all
+pb_de <- pb_de[-which(names(pb_de) %in% "DEA")]
+
 sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
+sce <- sce[, !sce$donor %in% c("2.0", "5.0")]
+sce$donor <- sce$donor |> droplevels()
+sce$tissue <- sce$tissue |> droplevels()
 
 #list to map de names to cell type names
 ct_nam <- list("cap_pseudo_bulk" = c("capillary"),
@@ -99,7 +110,6 @@ for (. in names(pb_de)) {
 ```
 
 ::: panel-tabset
-
 ```{r}
 #| results: asis
 #| label: volcano tab
@@ -110,7 +120,6 @@ for (. in names(pb_de)) {
 }
 
 ```
-
 :::
 
 ### Pseudobulk Heatmap
@@ -121,10 +130,11 @@ for (. in names(pb_de)) {
 #| echo: true
 #| code-fold: true
 
-sce_sub <- sce[,!sce$tissue %in% "mixed"]
-summed <- aggregateAcrossCells(sce_sub, 
-                               id=colData(sce_sub)[,c("tissue", "ct_broad", "donor")],
+summed <- aggregateAcrossCells(sce, 
+                               id=colData(sce)[,c("tissue", "ct_broad", "donor")],
                                use.assay.type = "counts")
+
+summed <- summed[,summed$ncells >= 10]
 rownames(summed) <- gsub("^.*\\.","",rownames(summed))
 
 # subset res to de-genes
@@ -135,11 +145,12 @@ de_list <- lapply(pb_de, function(.){
 }) 
 
 drop_ind <- which(sapply(de_list, nrow) < 1)
-drop_ind2 <- which(names(de_list) %in% "DEA")
+drop_ind2 <- which(names(de_list) %in% c("DEA", "all"))
 de_gen_list <- de_list[-c(drop_ind, drop_ind2)]
 
 for (. in names(de_gen_list)) {
     sub <- summed[,colData(summed)$ct_broad %in% ct_nam[[.]]]
+    sub <- sub[,order(sub$tissue)]
     mtx_sub <- log1p(assays(sub)[["counts"]][rownames(de_gen_list[[.]]),])
     colnames(mtx_sub) <- paste0("pseudobulk_", seq_along(1:ncol(sub)))
     cd <- data.frame("tissue" = sub$tissue)
@@ -157,34 +168,34 @@ for (. in names(de_gen_list)) {
 ```
 
 ::: panel-tabset
-
 ```{r}
 #| results: asis
 #| label: heatmap tab
 
-sce_sub <- sce[,!sce$tissue %in% "mixed"]
-summed <- aggregateAcrossCells(sce_sub, 
-                               id=colData(sce_sub)[,c("tissue", "ct_broad", "donor")],
+summed <- aggregateAcrossCells(sce, 
+                               id=colData(sce)[,c("tissue", "ct_broad", "donor")],
                                use.assay.type = "counts")
+
+summed <- summed[,summed$ncells >= 10]
 rownames(summed) <- gsub("^.*\\.","",rownames(summed))
 
 # subset res to de-genes
 de_list <- lapply(pb_de, function(.){
   top <- as.data.frame(.) |> 
-      filter(FDR < 0.05) |> 
-      slice_max(abs(logFC), n = 30)
+      filter(FDR < 0.01) |> 
+      slice_max(abs(logFC), n = 20)
 }) 
 
 drop_ind <- which(sapply(de_list, nrow) < 1)
-drop_ind2 <- which(names(de_list) %in% "DEA")
+drop_ind2 <- which(names(de_list) %in% c("DEA", "all"))
 de_gen_list <- de_list[-c(drop_ind, drop_ind2)]
 
 for (. in names(de_gen_list)) {
     sub <- summed[,colData(summed)$ct_broad %in% ct_nam[[.]]]
+    sub <- sub[,order(sub$tissue)]
     mtx_sub <- log1p(assays(sub)[["counts"]][rownames(de_gen_list[[.]]),])
     colnames(mtx_sub) <- paste0("pseudobulk_", seq_along(1:ncol(sub)))
-    cd <- data.frame("tissue" = sub$tissue,
-                     "donor" = sub$donor)
+    cd <- data.frame("tissue" = sub$tissue)
     rownames(cd) <- colnames(mtx_sub)
     hm <- pheatmap(mtx_sub, 
         main = ., fontsize = 6,
@@ -198,6 +209,41 @@ for (. in names(de_gen_list)) {
 
 ```
 
+#### all
+
+```{r}
+#| results: asis
+#| label: heatmap tab all
+
+summed_all <- aggregateAcrossCells(sce, 
+                               id=colData(sce)[,c("tissue", "donor")],
+                               use.assay.type = "counts")
+
+summed_all <- summed_all[,summed_all$ncells >= 10]
+rownames(summed_all) <- gsub("^.*\\.","",rownames(summed_all))
+
+# subset res to de-genes
+de_all <- as.data.frame(pb_all) |> 
+      filter(FDR < 0.01) |> 
+      slice_max(abs(logFC), n = 20)
+
+
+summed_all <- summed_all[,order(summed_all$tissue)]
+mtx_all <- log1p(counts(summed_all)[rownames(de_all),])
+colnames(mtx_all) <- paste0("pseudobulk_", seq_along(1:ncol(summed_all)))
+cd <- data.frame("tissue" = summed_all$tissue,
+                 "donor" = summed_all$donor)
+rownames(cd) <- colnames(mtx_all)
+hm <- pheatmap(mtx_all, 
+               main = "all", fontsize = 6,
+               col = rev(hcl.colors(51, "RdBu")),
+               scale = "row", 
+               show_colnames = FALSE,
+               cluster_cols = FALSE,
+               annotation_col = cd)
+
+draw(hm)
+```
 :::
 
 ### UpSet plot
@@ -214,4 +260,40 @@ upset_list <- lapply(pb_de, function(de_res){
 upset(fromList(upset_list), order.by = "freq")
 
 ```
+
+#### upset all de
+
+```{r}
+#| label: upset all de
+
+upset_list <- lapply(pb_de, function(de_res){
+  de_res <- de_res |> 
+    filter(FDR < 0.05)
+  rownames(de_res)
+})
+
+upset(fromList(upset_list), order.by = "freq")
+
+```
+
+
+### Boxplots DE genes
+
+
+
+```{r}
+
+rownames(sce) <- gsub("^.*\\.","",rownames(sce))
+sce_col <- sce[,sce$ct_broad %in% "collector"]
+sce_col$ct_broad <- sce_col$ct_broad |> droplevels()
+summed_col <- summed[,summed$ct_broad %in% "collector"]
+summed_col$ct_broad <- summed_col$ct_broad |> droplevels()
+
+plotExpression(sce_col, features="ACKR4", 
+    x="tissue", colour_by="donor")
+
+plotExpression(summed_col, features="ACKR4", 
+    x="tissue", colour_by="donor", exprs_values = "counts")
+```
+
 
