@@ -2,26 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/about.html</loc>
-    <lastmod>2023-10-25T14:37:41.856Z</lastmod>
+    <lastmod>2023-10-30T13:52:58.604Z</lastmod>
   </url>
   <url>
-    <loc>https://almutlue.github.io/lec_flow_push/code/convert_to_adata.html</loc>
-    <lastmod>2023-10-25T14:37:13.195Z</lastmod>
-  </url>
-  <url>
-    <loc>https://almutlue.github.io/lec_flow_push/code/preprocessing_n_removal.html</loc>
-    <lastmod>2023-10-25T14:35:57.590Z</lastmod>
-  </url>
-  <url>
-    <loc>https://almutlue.github.io/lec_flow_push/index.html</loc>
-    <lastmod>2023-10-25T14:35:48.038Z</lastmod>
+    <loc>https://almutlue.github.io/lec_flow_push/code/data_viz.html</loc>
+    <lastmod>2023-10-30T13:52:28.800Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/shinycell.html</loc>
-    <lastmod>2023-10-25T14:37:12.823Z</lastmod>
+    <lastmod>2023-10-30T13:51:59.363Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/preprocessing_n_removal.html</loc>
+    <lastmod>2023-10-30T13:50:20.693Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/index.html</loc>
+    <lastmod>2023-10-30T13:50:12.245Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/pb_de.html</loc>
+    <lastmod>2023-10-30T13:50:44.526Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/convert_to_adata.html</loc>
+    <lastmod>2023-10-30T13:51:59.691Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/vis_de.html</loc>
-    <lastmod>2023-10-25T14:37:41.636Z</lastmod>
+    <lastmod>2023-10-30T13:52:58.380Z</lastmod>
   </url>
 </urlset>
