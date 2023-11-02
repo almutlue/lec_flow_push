@@ -45,6 +45,10 @@ sce <- sce[, !sce$donor %in% c("2.0", "5.0")]
 sce$donor <- sce$donor |> droplevels()
 sce$tissue <- sce$tissue |> droplevels()
 
+# mean_expr
+mean_expr_fat <- rowMeans(logcounts(sce[,sce$tissue %in% "fat"]))
+mean_expr_skin <- rowMeans(logcounts(sce[,sce$tissue %in% "skin"]))
+
 ```
 
 ### Pseudobulk DE
@@ -84,6 +88,8 @@ table(summed_all.filt$tissue)
 # de
 design <- model.matrix(~ donor + tissue, as.data.frame(colData(summed_all.filt)))
 dgl <- DGEList(counts(summed_all.filt))
+keep <- filterByExpr(dgl, design)
+dgl <- dgl[keep, , keep.lib.sizes=FALSE]
 dgl <- calcNormFactors(dgl)
 dgl <- estimateDisp(dgl, design)
 fit <- glmQLFit(dgl, design)
@@ -92,6 +98,10 @@ de <- glmQLFTest(fit, coef="tissueskin")
 tt <- topTags(de, n = Inf)$table
 tt$full_gene_name <- rownames(tt)
 tt$gene_symbol <- gsub("^.*\\.","",rownames(tt))
+
+
+tt$meanExpr_fat <- mean_expr_fat[rownames(tt)]
+tt$meanExpr_skin <- mean_expr_skin[rownames(tt)]
 
 saveRDS(tt, file.path("..", "out", "de", "pb_all.rds"))
 write.csv(tt, file.path("..", "out", "de", "pb_all.csv"))

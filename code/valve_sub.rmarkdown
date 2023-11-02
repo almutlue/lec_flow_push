@@ -1,0 +1,239 @@
+---
+title: "valve subgroups"
+author: "Almut Lütge"
+---
+
+
+## Valve subgroups
+
+Explore expression pattern of valve sub types
+
+### Preamble
+
+
+```{r}
+#| label: load-libs
+#| echo: true
+#| output: false
+
+library(scran)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scuttle)
+library(DESeq2)
+library(edgeR)
+library(clustifyr)
+library(pheatmap)
+library(scater)
+library(patchwork)
+library(SingleCellExperiment)
+library(stringr)
+library(gridExtra)
+```
+
+
+### Data
+
+#### single cell data
+
+
+```{r}
+#| label: data
+
+sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
+
+sce_val <- sce[,sce$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res %in% c("8", "9")]
+sce_val$val_cluster <- sce_val$logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res |> 
+  droplevels() 
+
+levels(sce_val$val_cluster) <- c("valve1", "valve2")
+
+```
+
+
+### Pseudobulk valve1 vs valve2
+
+
+```{r}
+#| label: pb valve
+pb_val <-  aggregateAcrossCells(sce_val,
+                               id=colData(sce_val)[,c("val_cluster", "donor")],
+                               use.assay.type = "counts")
+
+pb_val <- pb_val[,pb_val$ncells >= 10]
+print(table(pb_val$val_cluster))
+  
+# de
+design <- model.matrix(~ donor + val_cluster, as.data.frame(colData(pb_val)))
+dgl <- DGEList(counts(pb_val))
+dgl <- calcNormFactors(dgl)
+dgl <- estimateDisp(dgl, design)
+fit <- glmQLFit(dgl, design)
+de <- glmQLFTest(fit, coef="val_clustervalve2")
+
+tt <- topTags(de, n = Inf)$table
+tt$full_gene_name <- rownames(tt)
+tt$gene_symbol <- gsub("^.*\\.","",rownames(tt))
+
+saveRDS(tt, file.path("..", "out", "de", "valve2_vs_1.rds"))
+write.csv(tt, file.path("..", "out", "de", "valve2_vs_1.csv"))
+
+```
+
+
+#### Bulk expression data
+
+
+```{r}
+#| label: bulk data
+
+fc_files <- list.files("../data/bulk-data-featurecounts", pattern="*.txt", full.names=TRUE)
+fc_name <- list.files("../data/bulk-data-featurecounts", pattern="*.txt", full.names=FALSE)
+fc_name <- gsub(".txt", "", fc_name)
+fc_list <- lapply(fc_files, read.table, header = TRUE)
+names(fc_list) <- fc_name
+
+fc_list <- lapply(names(fc_list), function(fc_nam){
+  fc <- fc_list[[fc_nam]]
+  fc[,fc_nam] <- fc$matchCounts
+  fc <- fc |> select(-matchCounts)
+  fc
+})
+
+fc_tab <- fc_list |> purrr::reduce(full_join, by = "Identifier")
+rownames(fc_tab) <- fc_tab$Identifier
+fc_tab <- fc_tab |> select(-Identifier)
+
+meta <- data_frame("cond" = gsub(".*dyn_", "", colnames(fc_tab)),
+                   "sample" = gsub("_[0-9]{1,2}dyn.*", "", colnames(fc_tab)),
+                   "strength" = gsub("^.*_[0-9]_|_[a-z].*$", "", colnames(fc_tab)))
+rownames(meta) <- colnames(fc_tab)
+
+# to get rowData
+bulk_expr <- read.csv(file.path("..", "data", "4Donors_FPKM_Laminar_4-over-Oscillatory_4.csv"))
+bulk_expr <- bulk_expr[-1,]
+count_nam <- grep(".*FPKM",colnames(bulk_expr), value = T)
+row_dat_nam <- colnames(bulk_expr)[!colnames(bulk_expr) %in% c("X", "Cluster", count_nam)]
+row_dat <- bulk_expr[,c("gene_id", "gene_name")]
+rownames(row_dat) <- row_dat$gene_id
+row_dat <- row_dat[rownames(fc_tab),]
+
+# Generate summarized experiment
+bulk <- SummarizedExperiment(assays=list(counts=as.matrix(fc_tab)), 
+                             colData=meta, rowData = row_dat)
+
+dim(bulk)
+rownames(bulk) <- paste0(rowData(bulk)$gene_id, ".", rowData(bulk)$gene_name)
+
+#Filter genes
+bulk <- bulk[rowSums(assay(bulk, "counts")) > 5, ]
+dim(bulk)
+
+bulk <- bulk[, !bulk$strength %in% "04dyn"]
+
+#DESEQ2 dataset
+dds <- DESeq2::DESeqDataSet(bulk, design = ~ cond)
+dds <- estimateSizeFactors(dds)
+vsd <- DESeq2::vst(dds, blind = TRUE)
+```
+
+
+### Cluster plot
+
+
+```{r}
+plotReducedDim(sce, dimred="umap", 
+                     colour_by="logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res", 
+                     point_size = 0.8)
+```
+
+
+### Correlation clustifyr
+
+
+```{r}
+#| label: plot mds
+overlap <- intersect(rownames(sce_val), rownames(vsd))
+sce_val <- sce_val[overlap,]
+vsd <- vsd[overlap,]
+
+
+dec.val <- modelGeneVar(sce_val)
+hvg_val <- getTopHVGs(dec.val, n=1000)
+
+marker_info <- scoreMarkers(sce_val, sce_val$val_cluster)
+marker_val1 <- marker_info[["valve1"]]
+ordered_val1 <- marker_val1[order(marker_val1$rank.logFC.cohen),]
+top.ranked_val1 <- ordered_val1[ordered_val1$rank.logFC.cohen <= 100,]
+marker_val2 <- marker_info[["valve2"]]
+ordered_val2 <- marker_val2[order(marker_val2$rank.logFC.cohen),]
+top.ranked_val2 <- ordered_val2[ordered_val2$rank.logFC.cohen <= 100,]
+
+top <- c(rownames(top.ranked_val1), rownames(top.ranked_val2)) |> unique()
+
+tt_overlap <- tt[overlap,]
+top_ordered <- tt_overlap[order(tt_overlap$FDR),]
+top <- rownames(top_ordered)[1:100]
+
+res <- clustify(
+  input = as.matrix(logcounts(sce_val)),
+  metadata = data.frame(colData(sce_val)),
+  cluster_col = "val_cluster", 
+  ref_mat = assay(vsd),
+  query_genes = top 
+)
+
+plot_cor_heatmap(cor_mat = res)
+
+```
+
+
+### Pb MDS
+
+
+```{r}
+# | label: pb mds
+
+#pseudo_bulk
+pb_val <-  aggregateAcrossCells(sce_val,
+                               id=colData(sce_val)[,c("val_cluster", "donor")],
+                               use.assay.type = "logcounts")
+pb_val <- pb_val[,pb_val$ncells >= 10]
+colnames(pb_val) <- paste0(pb_val$val_cluster, "_", pb_val$donor)
+
+pb_val_sel <- pb_val[top,]
+vsd_sel <- vsd[top,]
+com <- cbind(assay(vsd_sel), logcounts(pb_val_sel))
+
+d <- DGEList(com, remove.zeros = TRUE)
+mds <- plotMDS.DGEList(d, top = 100)
+
+
+dist_mat <- dist(t(com), method = 'euclidean')
+hclust_avg <- hclust(dist_mat, method = 'average')
+plot(hclust_avg)
+```
+
+
+### heatmap top DE genes
+
+
+```{r}
+#| label: hm top de genes
+top <- rownames(top_ordered)[1:200]
+vsd_sel <- vsd[top,]
+cd <- data.frame("cond" = vsd_sel$cond)
+rownames(cd) <- colnames(vsd_sel)
+
+hm <- pheatmap(assay(vsd_sel), 
+        main = "Top DE genes valve2 vs valve1", fontsize = 6,
+        col = rev(hcl.colors(51, "RdBu")),
+        scale = "row", 
+        show_colnames = FALSE,
+        show_rownames = FALSE,
+        cluster_cols = TRUE,
+        annotation_col = cd)
+hm
+```
+

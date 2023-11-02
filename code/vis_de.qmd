@@ -74,6 +74,8 @@ rownames(pb_all) <- pb_all$gene_symbol
 pb_de[["all"]] <- pb_all
 pb_de <- pb_de[-which(names(pb_de) %in% "DEA")]
 
+pb_valve <-  readRDS("../out/de/valve2_vs_1.rds")
+
 sce <- readRDS(file.path("..", "data", "sce_all_metadata_genes.rds"))
 sce <- sce[, !sce$donor %in% c("2.0", "5.0")]
 sce$donor <- sce$donor |> droplevels()
@@ -119,6 +121,14 @@ for (. in names(pb_de)) {
     cat("####", ., "\n"); print(p); cat("\n\n")
 }
 
+pb_valve$gene_symbol[duplicated(pb_valve$gene_symbol)] <- paste0(
+  pb_valve$full_gene_name[duplicated(pb_valve$gene_symbol)], ".",
+  pb_valve$gene_symbol[duplicated(pb_valve$gene_symbol)]
+)
+
+rownames(pb_valve) <- pb_valve$gene_symbol
+p_val <- .volcano(df = pb_valve, title = "valve2 vs valve1", fdr = 0.05, lfc = 0.75)
+cat("####", "valve subgroups", "\n"); print(p_val); cat("\n\n")
 ```
 :::
 

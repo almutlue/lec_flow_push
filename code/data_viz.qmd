@@ -63,6 +63,7 @@ table(sce$donor)
 table(sce$cell_type_name)
 table(sce$ct_broad)
 table(sce$ct_broad, sce$tissue)
+table(sce$cell_type_name, sce$tissue)
 ```
 
 ### Data viz
