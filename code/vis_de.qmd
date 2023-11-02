@@ -109,6 +109,10 @@ for (. in names(pb_de)) {
     cat("####", ., "\n"); print(p); cat("\n\n")
 }
 
+rownames(pb_valve) <- pb_valve$gene_symbol
+p_val <- .volcano(df = pb_valve, title = "valve2 vs valve1", fdr = 0.05, lfc = 0.75)
+cat("####", "valve subgroups", "\n"); print(p_val); cat("\n\n")
+
 ```
 
 ::: panel-tabset

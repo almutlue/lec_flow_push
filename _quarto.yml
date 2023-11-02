@@ -21,7 +21,7 @@ website:
       - text: "Exploratory data analysis"
         menu:
           - code/data_viz.qmd
-          - code/valve_subset.qmd
+          - code/valve_sub.qmd
 
 format:
   html:
