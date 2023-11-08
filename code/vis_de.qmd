@@ -92,6 +92,22 @@ sce$ct_broad <- sce$cell_type_name |> forcats::fct_collapse(
   "collector" = c("5 collector"),
   "valve" = c("6 valve"),
   "prolieferative" = c("7 proliferative"))
+
+
+label_list <- list("cap_pseudo_bulk" = c("APOD","S100A4", "S100A6", "KLF2", "CAVIN3", "ID2",
+                                         "ADAMTS5", "PLXNA2", "EPB41", "CD34", 
+                                         "ANGPT2"),
+                   "coll_pseudo_bulk" = c("CFD","APOD", "ADAMTS5", "CCL2", "CCL21"),
+                   "valves_pseudo_bulk" = c("ICAM1", "S100A4","SOX18","ID1","SAMD4A",
+                                            "MFAP4","HMOX1","HBA2","MEOX2","HBA1","TEX14","SMAD5","FN1",
+                                            "GALNT13","CFH","MGP"),
+                   "all" = c("S100A4", "ADAMTS5", "COL5a2", "TAC3","RBP1","MFAP4","MGAT4C", "MSR1",
+                             "NCALD","GALNT13","NPTX2","SYT12"))
+
+valve_lab = c("NEO1","ADAMTS1","ADAMTS6","CD24","STC1","GRP","CCDC3","ACKR3",
+              "RCAN1","SEMA3D","FGL2","SLC12A2","ADAMTS9","ENOX1","IGFBP2",
+              "SERPINB1","CLDN11","ANKRD55","SCG3","HGF","HBA2","ADM","ANGPT2",
+              "CLU","APOD","GJA4","FST")
 ```
 
 ## Visualizations
@@ -105,12 +121,17 @@ sce$ct_broad <- sce$cell_type_name |> forcats::fct_collapse(
 #| #| code-fold: true
 
 for (. in names(pb_de)) {
-    p <- .volcano(df = pb_de[[.]], title = ., fdr = 0.05, lfc = 0.75)
+    p <- .volcano(df = pb_de[[.]], title = ., fdr = 0.05, lfc = 0.75, 
+                  select_lab =label_list[[.]])
     cat("####", ., "\n"); print(p); cat("\n\n")
 }
 
+dup_ind <-which(duplicated(pb_valve$gene_symbol))
+pb_valve$gene_symbol[dup_ind] <- paste0(pb_valve$full_gene_name[dup_ind], 
+                                        ".",  pb_valve$gene_symbol[dup_ind])
 rownames(pb_valve) <- pb_valve$gene_symbol
-p_val <- .volcano(df = pb_valve, title = "valve2 vs valve1", fdr = 0.05, lfc = 0.75)
+p_val <- .volcano(df = pb_valve, title = "valve2 vs valve1", fdr = 0.05, 
+                  lfc = 0.75, select_lab = valve_lab)
 cat("####", "valve subgroups", "\n"); print(p_val); cat("\n\n")
 
 ```
@@ -121,7 +142,8 @@ cat("####", "valve subgroups", "\n"); print(p_val); cat("\n\n")
 #| label: volcano tab
 
 for (. in names(pb_de)) {
-    p <- .volcano(df = pb_de[[.]], title = ., fdr = 0.05, lfc = 0.75)
+    p <- .volcano(df = pb_de[[.]], title = ., fdr = 0.05, lfc = 0.75, 
+                  select_lab =label_list[[.]])
     cat("####", ., "\n"); print(p); cat("\n\n")
 }
 
@@ -131,7 +153,8 @@ pb_valve$gene_symbol[duplicated(pb_valve$gene_symbol)] <- paste0(
 )
 
 rownames(pb_valve) <- pb_valve$gene_symbol
-p_val <- .volcano(df = pb_valve, title = "valve2 vs valve1", fdr = 0.05, lfc = 0.75)
+p_val <- .volcano(df = pb_valve, title = "valve2 vs valve1", fdr = 0.05, 
+                  lfc = 0.75, select_lab = valve_lab)
 cat("####", "valve subgroups", "\n"); print(p_val); cat("\n\n")
 ```
 :::
