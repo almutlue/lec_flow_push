@@ -314,7 +314,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"precollector"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"3 precollector1"</span>, <span class="st">"4 precollector2"</span>),</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"collector"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"5 collector"</span>),</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valve"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"6 valve"</span>),</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"prolieferative"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"7 proliferative"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"prolieferative"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"7 proliferative"</span>))</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>label_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"cap_pseudo_bulk"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"APOD"</span>,<span class="st">"S100A4"</span>, <span class="st">"S100A6"</span>, <span class="st">"KLF2"</span>, <span class="st">"CAVIN3"</span>, <span class="st">"ID2"</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"ADAMTS5"</span>, <span class="st">"PLXNA2"</span>, <span class="st">"EPB41"</span>, <span class="st">"CD34"</span>, </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"ANGPT2"</span>),</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"coll_pseudo_bulk"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"CFD"</span>,<span class="st">"APOD"</span>, <span class="st">"ADAMTS5"</span>, <span class="st">"CCL2"</span>, <span class="st">"CCL21"</span>),</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"valves_pseudo_bulk"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"ICAM1"</span>, <span class="st">"S100A4"</span>,<span class="st">"SOX18"</span>,<span class="st">"ID1"</span>,<span class="st">"SAMD4A"</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">"MFAP4"</span>,<span class="st">"HMOX1"</span>,<span class="st">"HBA2"</span>,<span class="st">"MEOX2"</span>,<span class="st">"HBA1"</span>,<span class="st">"TEX14"</span>,<span class="st">"SMAD5"</span>,<span class="st">"FN1"</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">"GALNT13"</span>,<span class="st">"CFH"</span>,<span class="st">"MGP"</span>),</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"all"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"S100A4"</span>, <span class="st">"ADAMTS5"</span>, <span class="st">"COL5a2"</span>, <span class="st">"TAC3"</span>,<span class="st">"RBP1"</span>,<span class="st">"MFAP4"</span>,<span class="st">"MGAT4C"</span>, <span class="st">"MSR1"</span>,</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"NCALD"</span>,<span class="st">"GALNT13"</span>,<span class="st">"NPTX2"</span>,<span class="st">"SYT12"</span>))</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>valve_lab <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"NEO1"</span>,<span class="st">"ADAMTS1"</span>,<span class="st">"ADAMTS6"</span>,<span class="st">"CD24"</span>,<span class="st">"STC1"</span>,<span class="st">"GRP"</span>,<span class="st">"CCDC3"</span>,<span class="st">"ACKR3"</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>              <span class="st">"RCAN1"</span>,<span class="st">"SEMA3D"</span>,<span class="st">"FGL2"</span>,<span class="st">"SLC12A2"</span>,<span class="st">"ADAMTS9"</span>,<span class="st">"ENOX1"</span>,<span class="st">"IGFBP2"</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>              <span class="st">"SERPINB1"</span>,<span class="st">"CLDN11"</span>,<span class="st">"ANKRD55"</span>,<span class="st">"SCG3"</span>,<span class="st">"HGF"</span>,<span class="st">"HBA2"</span>,<span class="st">"ADM"</span>,<span class="st">"ANGPT2"</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>              <span class="st">"CLU"</span>,<span class="st">"APOD"</span>,<span class="st">"GJA4"</span>,<span class="st">"FST"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -324,20 +340,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="volcanos">Volcano(s)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (. <span class="cf">in</span> <span class="fu">names</span>(pb_de)) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">.volcano</span>(<span class="at">df =</span> pb_de[[.]], <span class="at">title =</span> ., <span class="at">fdr =</span> <span class="fl">0.05</span>, <span class="at">lfc =</span> <span class="fl">0.75</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"####"</span>, ., <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(pb_valve) <span class="ot">&lt;-</span> pb_valve<span class="sc">$</span>gene_symbol</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">.volcano</span>(<span class="at">df =</span> pb_valve, <span class="at">title =</span> <span class="st">"valve2 vs valve1"</span>, <span class="at">fdr =</span> <span class="fl">0.05</span>, <span class="at">lfc =</span> <span class="fl">0.75</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"####"</span>, <span class="st">"valve subgroups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p_val); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">.volcano</span>(<span class="at">df =</span> pb_de[[.]], <span class="at">title =</span> ., <span class="at">fdr =</span> <span class="fl">0.05</span>, <span class="at">lfc =</span> <span class="fl">0.75</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">select_lab =</span>label_list[[.]])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"####"</span>, ., <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>dup_ind <span class="ot">&lt;-</span><span class="fu">which</span>(<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>pb_valve<span class="sc">$</span>gene_symbol[dup_ind] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(pb_valve<span class="sc">$</span>full_gene_name[dup_ind], </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"."</span>,  pb_valve<span class="sc">$</span>gene_symbol[dup_ind])</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(pb_valve) <span class="ot">&lt;-</span> pb_valve<span class="sc">$</span>gene_symbol</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">.volcano</span>(<span class="at">df =</span> pb_valve, <span class="at">title =</span> <span class="st">"valve2 vs valve1"</span>, <span class="at">fdr =</span> <span class="fl">0.05</span>, </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">lfc =</span> <span class="fl">0.75</span>, <span class="at">select_lab =</span> valve_lab)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"####"</span>, <span class="st">"valve subgroups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p_val); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">cap_pseudo_bulk</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">coll_pseudo_bulk</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">precoll_pseudo_bulk</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">valves_pseudo_bulk</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">all</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">valve subgroups</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<pre><code>Warning: ggrepel: 245 unlabeled data points (too many overlaps). Consider
-increasing max.overlaps</code></pre>
 <p><img src="vis_de_files/figure-html/volcano tab-1.png" class="img-fluid" width="672"></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
@@ -349,26 +368,21 @@ increasing max.overlaps</code></pre>
 <p><img src="vis_de_files/figure-html/volcano tab-3.png" class="img-fluid" width="672"></p>
 </div>
 <div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
-<pre><code>Warning: ggrepel: 23 unlabeled data points (too many overlaps). Consider
-increasing max.overlaps</code></pre>
 <p><img src="vis_de_files/figure-html/volcano tab-4.png" class="img-fluid" width="672"></p>
 </div>
 <div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
-<pre><code>Warning: ggrepel: 45 unlabeled data points (too many overlaps). Consider
-increasing max.overlaps</code></pre>
 <p><img src="vis_de_files/figure-html/volcano tab-5.png" class="img-fluid" width="672"></p>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pb_valve<span class="sc">$</span>gene_symbol[<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol)] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  pb_valve<span class="sc">$</span>full_gene_name[<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol)], <span class="st">"."</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  pb_valve<span class="sc">$</span>gene_symbol[<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol)]</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(pb_valve) <span class="ot">&lt;-</span> pb_valve<span class="sc">$</span>gene_symbol</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">.volcano</span>(<span class="at">df =</span> pb_valve, <span class="at">title =</span> <span class="st">"valve2 vs valve1"</span>, <span class="at">fdr =</span> <span class="fl">0.05</span>, <span class="at">lfc =</span> <span class="fl">0.75</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"####"</span>, <span class="st">"valve subgroups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p_val); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pb_valve<span class="sc">$</span>gene_symbol[<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol)] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  pb_valve<span class="sc">$</span>full_gene_name[<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol)], <span class="st">"."</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  pb_valve<span class="sc">$</span>gene_symbol[<span class="fu">duplicated</span>(pb_valve<span class="sc">$</span>gene_symbol)]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(pb_valve) <span class="ot">&lt;-</span> pb_valve<span class="sc">$</span>gene_symbol</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>p_val <span class="ot">&lt;-</span> <span class="fu">.volcano</span>(<span class="at">df =</span> pb_valve, <span class="at">title =</span> <span class="st">"valve2 vs valve1"</span>, <span class="at">fdr =</span> <span class="fl">0.05</span>, </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">lfc =</span> <span class="fl">0.75</span>, <span class="at">select_lab =</span> valve_lab)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"####"</span>, <span class="st">"valve subgroups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">print</span>(p_val); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
-<pre><code>Warning: ggrepel: 911 unlabeled data points (too many overlaps). Consider
-increasing max.overlaps</code></pre>
 <p><img src="vis_de_files/figure-html/volcano tab-6.png" class="img-fluid" width="672"></p>
 </div>
 </div>
@@ -379,40 +393,40 @@ increasing max.overlaps</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>summed <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce, </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"tissue"</span>, <span class="st">"ct_broad"</span>, <span class="st">"donor"</span>)],</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">use.assay.type =</span> <span class="st">"counts"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>summed <span class="ot">&lt;-</span> summed[,summed<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(summed) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(summed))</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># subset res to de-genes</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>de_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pb_de, <span class="cf">function</span>(.){</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  top <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(.) <span class="sc">|&gt;</span> </span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_max</span>(<span class="fu">abs</span>(logFC), <span class="at">n =</span> <span class="dv">20</span>)</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>}) </span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>drop_ind <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">sapply</span>(de_list, nrow) <span class="sc">&lt;</span> <span class="dv">1</span>)</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>drop_ind2 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">names</span>(de_list) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"DEA"</span>, <span class="st">"all"</span>))</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>de_gen_list <span class="ot">&lt;-</span> de_list[<span class="sc">-</span><span class="fu">c</span>(drop_ind, drop_ind2)]</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (. <span class="cf">in</span> <span class="fu">names</span>(de_gen_list)) {</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    sub <span class="ot">&lt;-</span> summed[,<span class="fu">colData</span>(summed)<span class="sc">$</span>ct_broad <span class="sc">%in%</span> ct_nam[[.]]]</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    sub <span class="ot">&lt;-</span> sub[,<span class="fu">order</span>(sub<span class="sc">$</span>tissue)]</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    mtx_sub <span class="ot">&lt;-</span> <span class="fu">log1p</span>(<span class="fu">assays</span>(sub)[[<span class="st">"counts"</span>]][<span class="fu">rownames</span>(de_gen_list[[.]]),])</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(mtx_sub) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"pseudobulk_"</span>, <span class="fu">seq_along</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(sub)))</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"tissue"</span> <span class="ot">=</span> sub<span class="sc">$</span>tissue)</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(mtx_sub)</span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(mtx_sub, </span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> ., <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">51</span>, <span class="st">"RdBu"</span>)),</span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">scale =</span> <span class="st">"row"</span>, </span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">cluster_cols =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">annotation_col =</span> cd)</span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"####"</span>, ., <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">draw</span>(hm); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>summed <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"tissue"</span>, <span class="st">"ct_broad"</span>, <span class="st">"donor"</span>)],</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">use.assay.type =</span> <span class="st">"counts"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>summed <span class="ot">&lt;-</span> summed[,summed<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(summed) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(summed))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># subset res to de-genes</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>de_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pb_de, <span class="cf">function</span>(.){</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  top <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(.) <span class="sc">|&gt;</span> </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_max</span>(<span class="fu">abs</span>(logFC), <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>}) </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>drop_ind <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">sapply</span>(de_list, nrow) <span class="sc">&lt;</span> <span class="dv">1</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>drop_ind2 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">names</span>(de_list) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"DEA"</span>, <span class="st">"all"</span>))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>de_gen_list <span class="ot">&lt;-</span> de_list[<span class="sc">-</span><span class="fu">c</span>(drop_ind, drop_ind2)]</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (. <span class="cf">in</span> <span class="fu">names</span>(de_gen_list)) {</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    sub <span class="ot">&lt;-</span> summed[,<span class="fu">colData</span>(summed)<span class="sc">$</span>ct_broad <span class="sc">%in%</span> ct_nam[[.]]]</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    sub <span class="ot">&lt;-</span> sub[,<span class="fu">order</span>(sub<span class="sc">$</span>tissue)]</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    mtx_sub <span class="ot">&lt;-</span> <span class="fu">log1p</span>(<span class="fu">assays</span>(sub)[[<span class="st">"counts"</span>]][<span class="fu">rownames</span>(de_gen_list[[.]]),])</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(mtx_sub) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"pseudobulk_"</span>, <span class="fu">seq_along</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(sub)))</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"tissue"</span> <span class="ot">=</span> sub<span class="sc">$</span>tissue)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(mtx_sub)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(mtx_sub, </span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> ., <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">51</span>, <span class="st">"RdBu"</span>)),</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">scale =</span> <span class="st">"row"</span>, </span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">cluster_cols =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">annotation_col =</span> cd)</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"####"</span>, ., <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>); <span class="fu">draw</span>(hm); <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -428,34 +442,34 @@ increasing max.overlaps</code></pre>
 <p><img src="vis_de_files/figure-html/heatmap tab-3.png" class="img-fluid" width="672"></p>
 </div>
 <div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce, </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"tissue"</span>, <span class="st">"donor"</span>)],</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">use.assay.type =</span> <span class="st">"counts"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> summed_all[,summed_all<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(summed_all) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(summed_all))</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># subset res to de-genes</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>de_all <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pb_all) <span class="sc">|&gt;</span> </span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_max</span>(<span class="fu">abs</span>(logFC), <span class="at">n =</span> <span class="dv">20</span>)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> summed_all[,<span class="fu">order</span>(summed_all<span class="sc">$</span>tissue)]</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>mtx_all <span class="ot">&lt;-</span> <span class="fu">log1p</span>(<span class="fu">counts</span>(summed_all)[<span class="fu">rownames</span>(de_all),])</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mtx_all) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"pseudobulk_"</span>, <span class="fu">seq_along</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(summed_all)))</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"tissue"</span> <span class="ot">=</span> summed_all<span class="sc">$</span>tissue,</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"donor"</span> <span class="ot">=</span> summed_all<span class="sc">$</span>donor)</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(mtx_all)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(mtx_all, </span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">"all"</span>, <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">51</span>, <span class="st">"RdBu"</span>)),</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>               <span class="at">scale =</span> <span class="st">"row"</span>, </span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">cluster_cols =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">annotation_col =</span> cd)</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(hm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"tissue"</span>, <span class="st">"donor"</span>)],</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">use.assay.type =</span> <span class="st">"counts"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> summed_all[,summed_all<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(summed_all) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(summed_all))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># subset res to de-genes</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>de_all <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pb_all) <span class="sc">|&gt;</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">slice_max</span>(<span class="fu">abs</span>(logFC), <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> summed_all[,<span class="fu">order</span>(summed_all<span class="sc">$</span>tissue)]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>mtx_all <span class="ot">&lt;-</span> <span class="fu">log1p</span>(<span class="fu">counts</span>(summed_all)[<span class="fu">rownames</span>(de_all),])</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mtx_all) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"pseudobulk_"</span>, <span class="fu">seq_along</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(summed_all)))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"tissue"</span> <span class="ot">=</span> summed_all<span class="sc">$</span>tissue,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"donor"</span> <span class="ot">=</span> summed_all<span class="sc">$</span>donor)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(mtx_all)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(mtx_all, </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">main =</span> <span class="st">"all"</span>, <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">51</span>, <span class="st">"RdBu"</span>)),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>               <span class="at">scale =</span> <span class="st">"row"</span>, </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">cluster_cols =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">annotation_col =</span> cd)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(hm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><img src="vis_de_files/figure-html/heatmap tab all-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
@@ -464,13 +478,13 @@ increasing max.overlaps</code></pre>
 <section id="upset-plot" class="level3">
 <h3 class="anchored" data-anchor-id="upset-plot">UpSet plot</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>upset_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pb_de, <span class="cf">function</span>(de_res){</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  de_res <span class="ot">&lt;-</span> de_res <span class="sc">|&gt;</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> <span class="fu">abs</span>(logFC) <span class="sc">&gt;</span> <span class="fl">0.75</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(de_res)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">upset</span>(<span class="fu">fromList</span>(upset_list), <span class="at">order.by =</span> <span class="st">"freq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>upset_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pb_de, <span class="cf">function</span>(de_res){</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  de_res <span class="ot">&lt;-</span> de_res <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> <span class="fu">abs</span>(logFC) <span class="sc">&gt;</span> <span class="fl">0.75</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(de_res)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">upset</span>(<span class="fu">fromList</span>(upset_list), <span class="at">order.by =</span> <span class="st">"freq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="vis_de_files/figure-html/upset-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -478,13 +492,13 @@ increasing max.overlaps</code></pre>
 <section id="upset-all-de" class="level4">
 <h4 class="anchored" data-anchor-id="upset-all-de">upset all de</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>upset_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pb_de, <span class="cf">function</span>(de_res){</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  de_res <span class="ot">&lt;-</span> de_res <span class="sc">|&gt;</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(de_res)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">upset</span>(<span class="fu">fromList</span>(upset_list), <span class="at">order.by =</span> <span class="st">"freq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>upset_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pb_de, <span class="cf">function</span>(de_res){</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  de_res <span class="ot">&lt;-</span> de_res <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(FDR <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(de_res)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">upset</span>(<span class="fu">fromList</span>(upset_list), <span class="at">order.by =</span> <span class="st">"freq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="vis_de_files/figure-html/upset all de-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -494,19 +508,19 @@ increasing max.overlaps</code></pre>
 <section id="boxplots-de-genes" class="level3">
 <h3 class="anchored" data-anchor-id="boxplots-de-genes">Boxplots DE genes</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sce) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(sce))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sce_col <span class="ot">&lt;-</span> sce[,sce<span class="sc">$</span>ct_broad <span class="sc">%in%</span> <span class="st">"collector"</span>]</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sce_col<span class="sc">$</span>ct_broad <span class="ot">&lt;-</span> sce_col<span class="sc">$</span>ct_broad <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>summed_col <span class="ot">&lt;-</span> summed[,summed<span class="sc">$</span>ct_broad <span class="sc">%in%</span> <span class="st">"collector"</span>]</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>summed_col<span class="sc">$</span>ct_broad <span class="ot">&lt;-</span> summed_col<span class="sc">$</span>ct_broad <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotExpression</span>(sce_col, <span class="at">features=</span><span class="st">"ACKR4"</span>, </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"tissue"</span>, <span class="at">colour_by=</span><span class="st">"donor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(sce) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(sce))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sce_col <span class="ot">&lt;-</span> sce[,sce<span class="sc">$</span>ct_broad <span class="sc">%in%</span> <span class="st">"collector"</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>sce_col<span class="sc">$</span>ct_broad <span class="ot">&lt;-</span> sce_col<span class="sc">$</span>ct_broad <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>summed_col <span class="ot">&lt;-</span> summed[,summed<span class="sc">$</span>ct_broad <span class="sc">%in%</span> <span class="st">"collector"</span>]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>summed_col<span class="sc">$</span>ct_broad <span class="ot">&lt;-</span> summed_col<span class="sc">$</span>ct_broad <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotExpression</span>(sce_col, <span class="at">features=</span><span class="st">"ACKR4"</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"tissue"</span>, <span class="at">colour_by=</span><span class="st">"donor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="vis_de_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotExpression</span>(summed_col, <span class="at">features=</span><span class="st">"ACKR4"</span>, </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"tissue"</span>, <span class="at">colour_by=</span><span class="st">"donor"</span>, <span class="at">exprs_values =</span> <span class="st">"counts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotExpression</span>(summed_col, <span class="at">features=</span><span class="st">"ACKR4"</span>, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x=</span><span class="st">"tissue"</span>, <span class="at">colour_by=</span><span class="st">"donor"</span>, <span class="at">exprs_values =</span> <span class="st">"counts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="vis_de_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
 </div>
