@@ -122,12 +122,22 @@ rownames(bulk) <- paste0(rowData(bulk)$gene_id, ".", rowData(bulk)$gene_name)
 bulk <- bulk[rowSums(assay(bulk, "counts")) > 5, ]
 dim(bulk)
 
+#Filter sample
 bulk <- bulk[, !bulk$strength %in% "04dyn"]
+bulk <- bulk[, !bulk$sample %in% "440z009_2"]
 
 #DESEQ2 dataset
-dds <- DESeq2::DESeqDataSet(bulk, design = ~ cond)
+dds <- DESeq2::DESeqDataSet(bulk, design = ~ sample + cond)
 dds <- estimateSizeFactors(dds)
 vsd <- DESeq2::vst(dds, blind = TRUE)
+
+#DE bulk
+DE_bulk <- read.csv(file.path("..", "data","result--Laminar_4--over--Static_4.csv"))
+dds <- DESeq(dds)
+cont <- c(0,0,0,0.5,0.5)
+res_de <- results(dds, contrast = cont)
+res_de <- res_de[order(res_de$padj), ]
+
 ```
 
 ### Cluster plot
@@ -201,11 +211,12 @@ hclust_avg <- hclust(dist_mat, method = 'average')
 plot(hclust_avg)
 ```
 
-### heatmap top DE genes
+### Heatmap top DE genes v1v2
 
 ```{r}
 #| label: hm top de genes
 top <- rownames(top_ordered)[1:200]
+top <- top[!top %in% "ENSG00000139329.LUM"]
 vsd_sel <- vsd[top,]
 cd <- data.frame("cond" = vsd_sel$cond)
 rownames(cd) <- colnames(vsd_sel)
@@ -219,4 +230,48 @@ hm <- pheatmap(assay(vsd_sel),
         cluster_cols = TRUE,
         annotation_col = cd)
 hm
+```
+
+### Top DE genes bulk
+
+#### Heatmap
+
+```{r}
+#| label: hm top de genes bulk
+
+top_bulk <- paste0(DE_bulk$gene_id[1:100], ".", DE_bulk$gene_name[1:100])
+res_sel <- res_de[which(res_de$padj < 0.01),]
+res_down <- res_sel[order(res_sel$stat),]
+res_up <- res_sel[order(res_sel$stat, decreasing = T),]
+
+top_bulk <- c(rownames(res_down)[1:50], rownames(res_up)[1:50])
+top_bulk <- top_bulk[top_bulk %in% rownames(pb_val)]
+
+sub <- logcounts(pb_val)[top_bulk,]
+sub <- sub[rowSums(sub) > 0,]
+cd <- data.frame("cond" = pb_val$val_cluster,
+                 "donor" = pb_val$donor)
+rownames(cd) <- colnames(pb_val)
+
+hm <- pheatmap(as.matrix(sub), 
+        main = "Top DE genes valve2 vs valve1", fontsize = 6,
+        col = rev(hcl.colors(20, "RdBu")),
+        scale = "row", 
+        show_colnames = FALSE,
+        show_rownames = FALSE,
+        cluster_cols = TRUE,
+        annotation_col = cd)
+hm
+```
+
+#### PCA
+
+```{r}
+#| label: PCA
+sce_val <- runPCA(sce_val, subset_row = top_bulk)
+plotReducedDim(sce_val, dimred="PCA", colour_by="val_cluster")
+
+pb_val <- runPCA(pb_val, subset_row = top_bulk)
+plotReducedDim(pb_val, dimred="PCA", colour_by="val_cluster")
+
 ```

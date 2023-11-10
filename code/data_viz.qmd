@@ -20,6 +20,7 @@ library(tidyr)
 library(ggplot2)
 library(scuttle)
 library(scater)
+library(DT)
 library(patchwork)
 library(SingleCellExperiment)
 library(stringr)
@@ -53,6 +54,12 @@ names(cList[["cell_type_name"]]) <- c("1 capillary1","2 capillary2","3 precollec
 names(cList[["tissue"]]) <- c("fat","mixed","skin")
 names(cList[["donor"]]) <- c("1.0","2.0","3.0","4.0","5.0","6.0","7.0")
 
+```
+
+```{r}
+#| include: false
+# Init Step to make sure that the js dependencies are loaded
+htmltools::tagList(datatable(meta_dat))
 ```
 
 #### cells per ct
@@ -147,3 +154,33 @@ wrap_plots(list("before" = p2,
   plot_layout(guides = "collect") &
   theme(legend.position = "bottom")
 ```
+
+### Marker gene expression
+
+::: panel-tabset
+
+```{r}
+#| label: marker gen expr
+#| results: asis
+
+
+marker_info <- scoreMarkers(sce, sce$cell_type_name)
+sel_col <- c("mean.logFC.detected", "mean.logFC.cohen", "mean.AUC")
+
+for (. in names(marker_info)) {
+    marker_up <- data.frame(marker_info[[.]]) |> 
+      filter(rank.AUC < 50 | rank.logFC.cohen < 50 | rank.logFC.detected < 50) |> 
+      rownames()
+    marker_down <- data.frame(marker_info[[.]]) |> 
+      filter(rank.AUC > max(rank.AUC) - 51 | 
+               rank.logFC.cohen > max(rank.logFC.cohen) - 51 | 
+               rank.logFC.detected > max(rank.logFC.detected) - 51) |> 
+      rownames()
+    dt = datatable(data.frame(marker_info[[.]])[c(marker_up, marker_down), sel_col])
+    write.csv(marker_info[[.]], paste0("../out/marker/marker_genes_", ., ".csv"))
+    cat("####", ., "\n"); print(htmltools::tagList(dt)); cat("\n\n")
+}
+
+```
+
+:::
