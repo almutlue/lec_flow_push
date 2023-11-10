@@ -200,7 +200,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cluster-plot" id="toc-cluster-plot" class="nav-link" data-scroll-target="#cluster-plot">Cluster plot</a></li>
   <li><a href="#correlation-clustifyr" id="toc-correlation-clustifyr" class="nav-link" data-scroll-target="#correlation-clustifyr">Correlation clustifyr</a></li>
   <li><a href="#pb-mds" id="toc-pb-mds" class="nav-link" data-scroll-target="#pb-mds">Pb MDS</a></li>
-  <li><a href="#heatmap-top-de-genes" id="toc-heatmap-top-de-genes" class="nav-link" data-scroll-target="#heatmap-top-de-genes">heatmap top DE genes</a></li>
+  <li><a href="#heatmap-top-de-genes-v1v2" id="toc-heatmap-top-de-genes-v1v2" class="nav-link" data-scroll-target="#heatmap-top-de-genes-v1v2">Heatmap top DE genes v1v2</a></li>
+  <li><a href="#top-de-genes-bulk" id="toc-top-de-genes-bulk" class="nav-link" data-scroll-target="#top-de-genes-bulk">Top DE genes bulk</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -353,25 +354,52 @@ valve1 valve2
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 16779    24</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>strength <span class="sc">%in%</span> <span class="st">"04dyn"</span>]</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#DESEQ2 dataset</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> DESeq2<span class="sc">::</span><span class="fu">DESeqDataSet</span>(bulk, <span class="at">design =</span> <span class="sc">~</span> cond)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter sample</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>strength <span class="sc">%in%</span> <span class="st">"04dyn"</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>sample <span class="sc">%in%</span> <span class="st">"440z009_2"</span>]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#DESEQ2 dataset</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> DESeq2<span class="sc">::</span><span class="fu">DESeqDataSet</span>(bulk, <span class="at">design =</span> <span class="sc">~</span> sample <span class="sc">+</span> cond)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in DESeq2::DESeqDataSet(bulk, design = ~cond): some variables in design
-formula are characters, converting to factors</code></pre>
+<pre><code>Warning in DESeq2::DESeqDataSet(bulk, design = ~sample + cond): some variables
+in design formula are characters, converting to factors</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">estimateSizeFactors</span>(dds)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> DESeq2<span class="sc">::</span><span class="fu">vst</span>(dds, <span class="at">blind =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> DESeq2<span class="sc">::</span><span class="fu">vst</span>(dds, <span class="at">blind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#DE bulk</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>DE_bulk <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"data"</span>,<span class="st">"result--Laminar_4--over--Static_4.csv"</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>using pre-existing size factors</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>estimating dispersions</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>gene-wise dispersion estimates</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>mean-dispersion relationship</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>final dispersion estimates</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>fitting model and testing</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cont <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="fl">0.5</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>res_de <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> cont)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>res_de <span class="ot">&lt;-</span> res_de[<span class="fu">order</span>(res_de<span class="sc">$</span>padj), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="cluster-plot" class="level3">
 <h3 class="anchored" data-anchor-id="cluster-plot">Cluster plot</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce, <span class="at">dimred=</span><span class="st">"umap"</span>, </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">colour_by=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res"</span>, </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">point_size =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce, <span class="at">dimred=</span><span class="st">"umap"</span>, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">colour_by=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res"</span>, </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">point_size =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="valve_sub_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -380,42 +408,42 @@ formula are characters, converting to factors</code></pre>
 <section id="correlation-clustifyr" class="level3">
 <h3 class="anchored" data-anchor-id="correlation-clustifyr">Correlation clustifyr</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>overlap <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">rownames</span>(sce_val), <span class="fu">rownames</span>(vsd))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>sce_val <span class="ot">&lt;-</span> sce_val[overlap,]</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> vsd[overlap,]</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>dec.val <span class="ot">&lt;-</span> <span class="fu">modelGeneVar</span>(sce_val)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>hvg_val <span class="ot">&lt;-</span> <span class="fu">getTopHVGs</span>(dec.val, <span class="at">n=</span><span class="dv">1000</span>)</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>marker_info <span class="ot">&lt;-</span> <span class="fu">scoreMarkers</span>(sce_val, sce_val<span class="sc">$</span>val_cluster)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>marker_val1 <span class="ot">&lt;-</span> marker_info[[<span class="st">"valve1"</span>]]</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>ordered_val1 <span class="ot">&lt;-</span> marker_val1[<span class="fu">order</span>(marker_val1<span class="sc">$</span>rank.logFC.cohen),]</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>top.ranked_val1 <span class="ot">&lt;-</span> ordered_val1[ordered_val1<span class="sc">$</span>rank.logFC.cohen <span class="sc">&lt;=</span> <span class="dv">100</span>,]</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>marker_val2 <span class="ot">&lt;-</span> marker_info[[<span class="st">"valve2"</span>]]</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>ordered_val2 <span class="ot">&lt;-</span> marker_val2[<span class="fu">order</span>(marker_val2<span class="sc">$</span>rank.logFC.cohen),]</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>top.ranked_val2 <span class="ot">&lt;-</span> ordered_val2[ordered_val2<span class="sc">$</span>rank.logFC.cohen <span class="sc">&lt;=</span> <span class="dv">100</span>,]</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rownames</span>(top.ranked_val1), <span class="fu">rownames</span>(top.ranked_val2)) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>tt_overlap <span class="ot">&lt;-</span> tt[overlap,]</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>top_ordered <span class="ot">&lt;-</span> tt_overlap[<span class="fu">order</span>(tt_overlap<span class="sc">$</span>FDR),]</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">rownames</span>(top_ordered)[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>]</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">clustify</span>(</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">input =</span> <span class="fu">as.matrix</span>(<span class="fu">logcounts</span>(sce_val)),</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">metadata =</span> <span class="fu">data.frame</span>(<span class="fu">colData</span>(sce_val)),</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">cluster_col =</span> <span class="st">"val_cluster"</span>, </span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_mat =</span> <span class="fu">assay</span>(vsd),</span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">query_genes =</span> top </span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>overlap <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">rownames</span>(sce_val), <span class="fu">rownames</span>(vsd))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sce_val <span class="ot">&lt;-</span> sce_val[overlap,]</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>vsd <span class="ot">&lt;-</span> vsd[overlap,]</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>dec.val <span class="ot">&lt;-</span> <span class="fu">modelGeneVar</span>(sce_val)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>hvg_val <span class="ot">&lt;-</span> <span class="fu">getTopHVGs</span>(dec.val, <span class="at">n=</span><span class="dv">1000</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>marker_info <span class="ot">&lt;-</span> <span class="fu">scoreMarkers</span>(sce_val, sce_val<span class="sc">$</span>val_cluster)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>marker_val1 <span class="ot">&lt;-</span> marker_info[[<span class="st">"valve1"</span>]]</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>ordered_val1 <span class="ot">&lt;-</span> marker_val1[<span class="fu">order</span>(marker_val1<span class="sc">$</span>rank.logFC.cohen),]</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>top.ranked_val1 <span class="ot">&lt;-</span> ordered_val1[ordered_val1<span class="sc">$</span>rank.logFC.cohen <span class="sc">&lt;=</span> <span class="dv">100</span>,]</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>marker_val2 <span class="ot">&lt;-</span> marker_info[[<span class="st">"valve2"</span>]]</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>ordered_val2 <span class="ot">&lt;-</span> marker_val2[<span class="fu">order</span>(marker_val2<span class="sc">$</span>rank.logFC.cohen),]</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>top.ranked_val2 <span class="ot">&lt;-</span> ordered_val2[ordered_val2<span class="sc">$</span>rank.logFC.cohen <span class="sc">&lt;=</span> <span class="dv">100</span>,]</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rownames</span>(top.ranked_val1), <span class="fu">rownames</span>(top.ranked_val2)) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>tt_overlap <span class="ot">&lt;-</span> tt[overlap,]</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>top_ordered <span class="ot">&lt;-</span> tt_overlap[<span class="fu">order</span>(tt_overlap<span class="sc">$</span>FDR),]</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">rownames</span>(top_ordered)[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>]</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">clustify</span>(</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">input =</span> <span class="fu">as.matrix</span>(<span class="fu">logcounts</span>(sce_val)),</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">metadata =</span> <span class="fu">data.frame</span>(<span class="fu">colData</span>(sce_val)),</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">cluster_col =</span> <span class="st">"val_cluster"</span>, </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">ref_mat =</span> <span class="fu">assay</span>(vsd),</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">query_genes =</span> top </span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>using # of genes: 100</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>similarity computation completed, matrix of 2 x 12, preparing output</code></pre>
+<pre><code>similarity computation completed, matrix of 2 x 9, preparing output</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_cor_heatmap</span>(<span class="at">cor_mat =</span> res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_cor_heatmap</span>(<span class="at">cor_mat =</span> res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="valve_sub_files/figure-html/plot mds-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -424,55 +452,119 @@ formula are characters, converting to factors</code></pre>
 <section id="pb-mds" class="level3">
 <h3 class="anchored" data-anchor-id="pb-mds">Pb MDS</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># | label: pb mds</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#pseudo_bulk</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>pb_val <span class="ot">&lt;-</span>  <span class="fu">aggregateAcrossCells</span>(sce_val,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce_val)[,<span class="fu">c</span>(<span class="st">"val_cluster"</span>, <span class="st">"donor"</span>)],</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">use.assay.type =</span> <span class="st">"logcounts"</span>)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>pb_val <span class="ot">&lt;-</span> pb_val[,pb_val<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pb_val) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(pb_val<span class="sc">$</span>val_cluster, <span class="st">"_"</span>, pb_val<span class="sc">$</span>donor)</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>pb_val_sel <span class="ot">&lt;-</span> pb_val[top,]</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>vsd_sel <span class="ot">&lt;-</span> vsd[top,]</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>com <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">assay</span>(vsd_sel), <span class="fu">logcounts</span>(pb_val_sel))</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(com, <span class="at">remove.zeros =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>mds <span class="ot">&lt;-</span> <span class="fu">plotMDS.DGEList</span>(d, <span class="at">top =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># | label: pb mds</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#pseudo_bulk</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>pb_val <span class="ot">&lt;-</span>  <span class="fu">aggregateAcrossCells</span>(sce_val,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce_val)[,<span class="fu">c</span>(<span class="st">"val_cluster"</span>, <span class="st">"donor"</span>)],</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">use.assay.type =</span> <span class="st">"logcounts"</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>pb_val <span class="ot">&lt;-</span> pb_val[,pb_val<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pb_val) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(pb_val<span class="sc">$</span>val_cluster, <span class="st">"_"</span>, pb_val<span class="sc">$</span>donor)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>pb_val_sel <span class="ot">&lt;-</span> pb_val[top,]</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>vsd_sel <span class="ot">&lt;-</span> vsd[top,]</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>com <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">assay</span>(vsd_sel), <span class="fu">logcounts</span>(pb_val_sel))</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(com, <span class="at">remove.zeros =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>mds <span class="ot">&lt;-</span> <span class="fu">plotMDS.DGEList</span>(d, <span class="at">top =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="valve_sub_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dist_mat <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(com), <span class="at">method =</span> <span class="st">'euclidean'</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>hclust_avg <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dist_mat, <span class="at">method =</span> <span class="st">'average'</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hclust_avg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>dist_mat <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="fu">t</span>(com), <span class="at">method =</span> <span class="st">'euclidean'</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>hclust_avg <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dist_mat, <span class="at">method =</span> <span class="st">'average'</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hclust_avg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="valve_sub_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-<section id="heatmap-top-de-genes" class="level3">
-<h3 class="anchored" data-anchor-id="heatmap-top-de-genes">heatmap top DE genes</h3>
+<section id="heatmap-top-de-genes-v1v2" class="level3">
+<h3 class="anchored" data-anchor-id="heatmap-top-de-genes-v1v2">Heatmap top DE genes v1v2</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">rownames</span>(top_ordered)[<span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>]</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>vsd_sel <span class="ot">&lt;-</span> vsd[top,]</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"cond"</span> <span class="ot">=</span> vsd_sel<span class="sc">$</span>cond)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(vsd_sel)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(<span class="fu">assay</span>(vsd_sel), </span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Top DE genes valve2 vs valve1"</span>, <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">51</span>, <span class="st">"RdBu"</span>)),</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">scale =</span> <span class="st">"row"</span>, </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_rownames =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">cluster_cols =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">annotation_col =</span> cd)</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>hm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> <span class="fu">rownames</span>(top_ordered)[<span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>top <span class="ot">&lt;-</span> top[<span class="sc">!</span>top <span class="sc">%in%</span> <span class="st">"ENSG00000139329.LUM"</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>vsd_sel <span class="ot">&lt;-</span> vsd[top,]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"cond"</span> <span class="ot">=</span> vsd_sel<span class="sc">$</span>cond)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(vsd_sel)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(<span class="fu">assay</span>(vsd_sel), </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Top DE genes valve2 vs valve1"</span>, <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">51</span>, <span class="st">"RdBu"</span>)),</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">scale =</span> <span class="st">"row"</span>, </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_rownames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">cluster_cols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">annotation_col =</span> cd)</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>hm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="valve_sub_files/figure-html/hm top de genes-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="top-de-genes-bulk" class="level3">
+<h3 class="anchored" data-anchor-id="top-de-genes-bulk">Top DE genes bulk</h3>
+<section id="heatmap" class="level4">
+<h4 class="anchored" data-anchor-id="heatmap">Heatmap</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>top_bulk <span class="ot">&lt;-</span> <span class="fu">paste0</span>(DE_bulk<span class="sc">$</span>gene_id[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>], <span class="st">"."</span>, DE_bulk<span class="sc">$</span>gene_name[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>])</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>res_sel <span class="ot">&lt;-</span> res_de[<span class="fu">which</span>(res_de<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.01</span>),]</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>res_down <span class="ot">&lt;-</span> res_sel[<span class="fu">order</span>(res_sel<span class="sc">$</span>stat),]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>res_up <span class="ot">&lt;-</span> res_sel[<span class="fu">order</span>(res_sel<span class="sc">$</span>stat, <span class="at">decreasing =</span> T),]</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>top_bulk <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rownames</span>(res_down)[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>], <span class="fu">rownames</span>(res_up)[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>])</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>top_bulk <span class="ot">&lt;-</span> top_bulk[top_bulk <span class="sc">%in%</span> <span class="fu">rownames</span>(pb_val)]</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> <span class="fu">logcounts</span>(pb_val)[top_bulk,]</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>sub <span class="ot">&lt;-</span> sub[<span class="fu">rowSums</span>(sub) <span class="sc">&gt;</span> <span class="dv">0</span>,]</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">"cond"</span> <span class="ot">=</span> pb_val<span class="sc">$</span>val_cluster,</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"donor"</span> <span class="ot">=</span> pb_val<span class="sc">$</span>donor)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cd) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(pb_val)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>hm <span class="ot">&lt;-</span> <span class="fu">pheatmap</span>(<span class="fu">as.matrix</span>(sub), </span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Top DE genes valve2 vs valve1"</span>, <span class="at">fontsize =</span> <span class="dv">6</span>,</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">rev</span>(<span class="fu">hcl.colors</span>(<span class="dv">20</span>, <span class="st">"RdBu"</span>)),</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">scale =</span> <span class="st">"row"</span>, </span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_colnames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_rownames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">cluster_cols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">annotation_col =</span> cd)</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>hm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="valve_sub_files/figure-html/hm top de genes bulk-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="pca" class="level4">
+<h4 class="anchored" data-anchor-id="pca">PCA</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sce_val <span class="ot">&lt;-</span> <span class="fu">runPCA</span>(sce_val, <span class="at">subset_row =</span> top_bulk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in (function (A, nv = 5, nu = nv, maxit = 1000, work = nv + 7, reorth =
+TRUE, : You're computing too large a percentage of total singular values, use a
+standard svd instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce_val, <span class="at">dimred=</span><span class="st">"PCA"</span>, <span class="at">colour_by=</span><span class="st">"val_cluster"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="valve_sub_files/figure-html/PCA-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pb_val <span class="ot">&lt;-</span> <span class="fu">runPCA</span>(pb_val, <span class="at">subset_row =</span> top_bulk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in check_numbers(k = k, nu = nu, nv = nv, limit = min(dim(x)) - : more
+singular values/vectors requested than available</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in (function (A, nv = 5, nu = nv, maxit = 1000, work = nv + 7, reorth =
+TRUE, : You're computing too large a percentage of total singular values, use a
+standard svd instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(pb_val, <span class="at">dimred=</span><span class="st">"PCA"</span>, <span class="at">colour_by=</span><span class="st">"val_cluster"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="valve_sub_files/figure-html/PCA-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+</section>
 </section>
 </section>
 
