@@ -21,8 +21,10 @@ library(ggplot2)
 library(scuttle)
 library(DESeq2)
 library(edgeR)
+library(VennDiagram)
 library(clustifyr)
-library(pheatmap)
+library(RColorBrewer)
+library(ComplexHeatmap)
 library(scater)
 library(patchwork)
 library(SingleCellExperiment)
@@ -32,7 +34,7 @@ library(gridExtra)
 
 ### Data
 
-#### single cell data
+#### Single cell data
 
 ```{r}
 #| label: data
@@ -47,7 +49,15 @@ levels(sce_val$val_cluster) <- c("valve1", "valve2")
 
 ```
 
-### Pseudobulk valve1 vs valve2
+##### Cluster plot
+
+```{r}
+plotReducedDim(sce, dimred="umap", 
+                     colour_by="logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res", 
+                     point_size = 0.8)
+```
+
+##### Pseudobulk valve1 vs valve2
 
 ```{r}
 #| label: pb valve
@@ -134,19 +144,12 @@ vsd <- DESeq2::vst(dds, blind = TRUE)
 #DE bulk
 DE_bulk <- read.csv(file.path("..", "data","result--Laminar_4--over--Static_4.csv"))
 dds <- DESeq(dds)
-cont <- c(0,0,0,0.5,0.5)
+cont <- c(0,0,0,1,1)
 res_de <- results(dds, contrast = cont)
 res_de <- res_de[order(res_de$padj), ]
 
 ```
 
-### Cluster plot
-
-```{r}
-plotReducedDim(sce, dimred="umap", 
-                     colour_by="logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res", 
-                     point_size = 0.8)
-```
 
 ### Correlation clustifyr
 
@@ -155,20 +158,6 @@ plotReducedDim(sce, dimred="umap",
 overlap <- intersect(rownames(sce_val), rownames(vsd))
 sce_val <- sce_val[overlap,]
 vsd <- vsd[overlap,]
-
-
-dec.val <- modelGeneVar(sce_val)
-hvg_val <- getTopHVGs(dec.val, n=1000)
-
-marker_info <- scoreMarkers(sce_val, sce_val$val_cluster)
-marker_val1 <- marker_info[["valve1"]]
-ordered_val1 <- marker_val1[order(marker_val1$rank.logFC.cohen),]
-top.ranked_val1 <- ordered_val1[ordered_val1$rank.logFC.cohen <= 100,]
-marker_val2 <- marker_info[["valve2"]]
-ordered_val2 <- marker_val2[order(marker_val2$rank.logFC.cohen),]
-top.ranked_val2 <- ordered_val2[ordered_val2$rank.logFC.cohen <= 100,]
-
-top <- c(rownames(top.ranked_val1), rownames(top.ranked_val2)) |> unique()
 
 tt_overlap <- tt[overlap,]
 top_ordered <- tt_overlap[order(tt_overlap$FDR),]
@@ -182,8 +171,8 @@ res <- clustify(
   query_genes = top 
 )
 
-plot_cor_heatmap(cor_mat = res)
-
+p <- plot_cor_heatmap(cor_mat = res, col = rev(hcl.colors(51, "Reds")))
+p
 ```
 
 ### Pb MDS
@@ -195,7 +184,6 @@ plot_cor_heatmap(cor_mat = res)
 pb_val <-  aggregateAcrossCells(sce_val,
                                id=colData(sce_val)[,c("val_cluster", "donor")],
                                use.assay.type = "logcounts")
-pb_val <- pb_val[,pb_val$ncells >= 10]
 colnames(pb_val) <- paste0(pb_val$val_cluster, "_", pb_val$donor)
 
 pb_val_sel <- pb_val[top,]
@@ -206,8 +194,8 @@ d <- DGEList(com, remove.zeros = TRUE)
 mds <- plotMDS.DGEList(d, top = 100)
 
 
-dist_mat <- dist(t(com), method = 'euclidean')
-hclust_avg <- hclust(dist_mat, method = 'average')
+dist_mat <- dist(t(com))
+hclust_avg <- hclust(dist_mat, method = 'ward.D2')
 plot(hclust_avg)
 ```
 
@@ -215,7 +203,7 @@ plot(hclust_avg)
 
 ```{r}
 #| label: hm top de genes
-top <- rownames(top_ordered)[1:200]
+top <- rownames(top_ordered)[1:100]
 top <- top[!top %in% "ENSG00000139329.LUM"]
 vsd_sel <- vsd[top,]
 cd <- data.frame("cond" = vsd_sel$cond)
@@ -239,12 +227,11 @@ hm
 ```{r}
 #| label: hm top de genes bulk
 
-top_bulk <- paste0(DE_bulk$gene_id[1:100], ".", DE_bulk$gene_name[1:100])
 res_sel <- res_de[which(res_de$padj < 0.01),]
 res_down <- res_sel[order(res_sel$stat),]
 res_up <- res_sel[order(res_sel$stat, decreasing = T),]
 
-top_bulk <- c(rownames(res_down)[1:50], rownames(res_up)[1:50])
+top_bulk <- c(rownames(res_up)[1:200], rownames(res_down)[1:200])
 top_bulk <- top_bulk[top_bulk %in% rownames(pb_val)]
 
 sub <- logcounts(pb_val)[top_bulk,]
@@ -253,15 +240,121 @@ cd <- data.frame("cond" = pb_val$val_cluster,
                  "donor" = pb_val$donor)
 rownames(cd) <- colnames(pb_val)
 
+# Specify colors
+ann_colors = list(
+    cond = c("valve1" = "#849db1", "valve2" = "#ef6f6a"),
+    donor = c("1.0" = "#4E79A7", "2.0" = "#F28E2B",
+              "3.0" = "#E15759", "4.0" = "#76B7B2",
+              "5.0" = "#59A14F", "6.0" = "#EDC948",
+              "7.0" = "#B07AA1")
+)
+
+
 hm <- pheatmap(as.matrix(sub), 
-        main = "Top DE genes valve2 vs valve1", fontsize = 6,
-        col = rev(hcl.colors(20, "RdBu")),
+        main = "Top flow associated DE genes", fontsize = 6,
+        col = rev(hcl.colors(50, "RdBu")),
         scale = "row", 
         show_colnames = FALSE,
         show_rownames = FALSE,
         cluster_cols = TRUE,
+        cluster_rows = TRUE,
+        annotation_colors = ann_colors,
+        show_row_dend = FALSE,
         annotation_col = cd)
 hm
+```
+
+### Heatmap patient subgroups
+
+```{r}
+#| label: hm subgroups
+pb_val1 <- pb_val[,pb_val$donor %in% c("6.0", "5.0", "7.0")]
+sub1 <- logcounts(pb_val1)[top_bulk,]
+sub1 <- sub1[rowSums(sub1) > 0,]
+cd <- data.frame("cond" = pb_val1$val_cluster,
+                 "donor" = pb_val1$donor)
+rownames(cd) <- colnames(pb_val1)
+
+hm <- pheatmap(as.matrix(sub1), 
+        main = "Top flow associated DE genes", fontsize = 6,
+        col = rev(hcl.colors(50, "RdBu")),
+        scale = "row", 
+        show_colnames = FALSE,
+        show_rownames = FALSE,
+        cluster_cols = TRUE,
+        annotation_colors = ann_colors,
+        show_row_dend = FALSE,
+        annotation_col = cd)
+hm
+
+pb_val2 <- pb_val[,pb_val$donor %in% c("2.0", "4.0")]
+sub2 <- logcounts(pb_val2)[top_bulk,]
+sub2 <- sub2[rowSums(sub2) > 0,]
+cd <- data.frame("cond" = pb_val2$val_cluster,
+                 "donor" = pb_val2$donor)
+rownames(cd) <- colnames(pb_val2)
+
+hm <- pheatmap(as.matrix(sub2), 
+        main = "Top flow associated DE genes", fontsize = 6,
+        col = rev(hcl.colors(50, "RdBu")),
+        scale = "row", 
+        show_colnames = FALSE,
+        show_rownames = FALSE,
+        cluster_cols = TRUE,
+        annotation_colors = ann_colors,
+        show_row_dend = FALSE,
+        annotation_col = cd)
+hm
+
+```
+
+#### Gene overlap
+
+```{r}
+#| label: overlap
+
+bulk <- res_de[overlap,]
+bulk <- bulk[which(bulk$padj < 0.01),]
+sc <- tt_overlap[tt_overlap$FDR < 0.01,]
+
+myCol <- brewer.pal(3, "Pastel2")
+
+# Chart
+venn.diagram(
+        x = list(bulk = rownames(bulk), sc = rownames(sc)),
+        category.names = c("Flow" , "valve1/valve2"),
+        filename = '../out/plots/venn_bulk_sc.png',
+        output=T,
+        
+        # Output features
+        imagetype="png" ,
+        height = 480 , 
+        width = 480 , 
+        resolution = 300,
+        compression = "lzw",
+
+        
+        # Circles
+        lwd = 2,
+        lty = 'blank',
+        fill = myCol[1:2],
+        
+        # Numbers
+        cex = .6,
+        fontface = "bold",
+        fontfamily = "sans",
+        
+        # Set names
+        cat.cex = 0.6,
+        cat.fontface = "bold",
+        cat.default.pos = "outer",
+        cat.pos = c(-15, 5),
+        cat.fontfamily = "sans",
+        #rotation = 1
+)
+
+
+
 ```
 
 #### PCA
@@ -275,3 +368,40 @@ pb_val <- runPCA(pb_val, subset_row = top_bulk)
 plotReducedDim(pb_val, dimred="PCA", colour_by="val_cluster")
 
 ```
+
+
+#### Dimplots
+```{r, fig.height=20, fig.width=12}
+#| label: dimplot
+#| 
+gene_list <- c("ALCAM","CD24","ITGA9","CD9","CAV1","SNCG","NEO1","ADAMTS6",
+               "ADAMTS1","SEMA3D","GJA1","CLDN11","ANGPT2","CLDN5","ADM",
+               "GJA4","SAT1","ID3","SCG3","NR2F1","APOD")
+
+rowData(sce_val)$gene_short <- rowData(sce_val)$Symbol
+dup <- which(duplicated(rowData(sce_val)$gene_short))
+rowData(sce_val)$gene_short[dup] <- rownames(sce_val)[dup]
+rownames(sce_val) <- rowData(sce_val)$gene_short
+
+dim_list <- lapply(gene_list, function(gene_nam){
+  p <- plotReducedDim(sce_val, dimred="umap", colour_by=gene_nam, 
+                      point_size = 0.8) +
+  ggtitle(gene_nam)
+})
+
+wrap_plots(dim_list, ncol = 3) 
+
+```
+
+#### Violinplots
+```{r, fig.height=25, fig.width=12}
+#| label: violin
+
+plotExpression(sce_val, features=gene_list, 
+    x="val_cluster", colour_by="val_cluster", ncol = 3)
+
+
+```
+
+
+
