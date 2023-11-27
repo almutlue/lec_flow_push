@@ -1,11 +1,10 @@
 ---
-title: "valve subgroups"
-author: "Almut Lütge"
+title: "valve_0_4_flow"
+editor: visual
 ---
 
-## Valve subgroups
+## Valve subgroup comparison with mild flow
 
-Explore expression pattern of valve sub types
 
 ### Preamble
 
@@ -80,8 +79,7 @@ tt <- topTags(de, n = Inf)$table
 tt$full_gene_name <- rownames(tt)
 tt$gene_symbol <- gsub("^.*\\.","",rownames(tt))
 
-saveRDS(tt, file.path("..", "out", "de", "valve2_vs_1.rds"))
-write.csv(tt, file.path("..", "out", "de", "valve2_vs_1.csv"))
+
 
 ```
 
@@ -133,9 +131,8 @@ bulk <- bulk[rowSums(assay(bulk, "counts")) > 5, ]
 dim(bulk)
 
 #Filter sample
+bulk <- bulk[, !bulk$strength %in% "4dyn"]
 bulk <- bulk[, !bulk$sample %in% "440z009_2"]
-bulk <- bulk[, !bulk$strength %in% "04dyn"]
-
 
 #DESEQ2 dataset
 dds <- DESeq2::DESeqDataSet(bulk, design = ~ sample + cond)
@@ -143,7 +140,6 @@ dds <- estimateSizeFactors(dds)
 vsd <- DESeq2::vst(dds, blind = TRUE)
 
 #DE bulk
-DE_bulk <- read.csv(file.path("..", "data","result--Laminar_4--over--Static_4.csv"))
 dds <- DESeq(dds)
 cont <- c(0,0,0,1,1)
 res_de <- results(dds, contrast = cont)

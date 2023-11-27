@@ -11,6 +11,7 @@ website:
       - text: "preprocessing"
         menu:
           - code/preprocessing_n_removal.ipynb
+          - code/integration_n_clustering.ipynb
       - text: "Differential expression"
         menu:
           - code/vis_de.qmd
