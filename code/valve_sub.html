@@ -133,6 +133,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../code/preprocessing_n_removal.html" rel="" target="">
  <span class="dropdown-text">preprocessing_n_removal.html</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../code/integration_n_clustering.html" rel="" target="">
+ <span class="dropdown-text">integration_n_clustering.html</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -367,11 +371,12 @@ valve1 valve2
 <pre><code>[1] 16779    24</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter sample</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>strength <span class="sc">%in%</span> <span class="st">"04dyn"</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>sample <span class="sc">%in%</span> <span class="st">"440z009_2"</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>sample <span class="sc">%in%</span> <span class="st">"440z009_2"</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>bulk <span class="ot">&lt;-</span> bulk[, <span class="sc">!</span>bulk<span class="sc">$</span>strength <span class="sc">%in%</span> <span class="st">"04dyn"</span>]</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#DESEQ2 dataset</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> DESeq2<span class="sc">::</span><span class="fu">DESeqDataSet</span>(bulk, <span class="at">design =</span> <span class="sc">~</span> sample <span class="sc">+</span> cond)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#DESEQ2 dataset</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> DESeq2<span class="sc">::</span><span class="fu">DESeqDataSet</span>(bulk, <span class="at">design =</span> <span class="sc">~</span> sample <span class="sc">+</span> cond)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in DESeq2::DESeqDataSet(bulk, design = ~sample + cond): some variables
 in design formula are characters, converting to factors</code></pre>

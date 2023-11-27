@@ -2,38 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/about.html</loc>
-    <lastmod>2023-11-15T09:53:31.663Z</lastmod>
+    <lastmod>2023-11-27T12:19:34.341Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/valve_04_flow.html</loc>
+    <lastmod>2023-11-27T12:19:32.329Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/data_viz.html</loc>
-    <lastmod>2023-11-15T09:53:01.106Z</lastmod>
+    <lastmod>2023-11-27T12:18:22.992Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/valve_sub.html</loc>
-    <lastmod>2023-11-15T09:52:22.385Z</lastmod>
+    <lastmod>2023-11-27T12:17:45.199Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/pb_de.html</loc>
-    <lastmod>2023-11-15T09:50:21.806Z</lastmod>
+    <lastmod>2023-11-27T12:15:47.837Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/index.html</loc>
-    <lastmod>2023-11-15T09:49:48.833Z</lastmod>
+    <lastmod>2023-11-27T12:15:15.640Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/preprocessing_n_removal.html</loc>
-    <lastmod>2023-11-15T09:49:57.941Z</lastmod>
+    <lastmod>2023-11-27T12:15:24.520Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/shinycell.html</loc>
-    <lastmod>2023-11-15T09:51:39.588Z</lastmod>
+    <lastmod>2023-11-27T12:17:04.510Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/convert_to_adata.html</loc>
-    <lastmod>2023-11-15T09:52:22.757Z</lastmod>
+    <lastmod>2023-11-27T12:17:45.551Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/vis_de.html</loc>
-    <lastmod>2023-11-15T09:53:31.447Z</lastmod>
+    <lastmod>2023-11-27T12:18:52.416Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/integration_n_clustering.html</loc>
+    <lastmod>2023-11-27T12:19:34.149Z</lastmod>
   </url>
 </urlset>
