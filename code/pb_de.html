@@ -202,6 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   <li><a href="#pseudobulk-de" id="toc-pseudobulk-de" class="nav-link" data-scroll-target="#pseudobulk-de">Pseudobulk DE</a></li>
   <li><a href="#pseudobulk-de-all" id="toc-pseudobulk-de-all" class="nav-link" data-scroll-target="#pseudobulk-de-all">Pseudobulk DE all</a></li>
+  <li><a href="#differential-abundance" id="toc-differential-abundance" class="nav-link" data-scroll-target="#differential-abundance">Differential abundance</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -339,6 +340,65 @@ valve         30  6511  28 12058</code></pre>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(tt, <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"pb_all.rds"</span>))</span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(tt, <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"pb_all.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="differential-abundance" class="level3">
+<h3 class="anchored" data-anchor-id="differential-abundance">Differential abundance</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sce_sub <span class="ot">&lt;-</span> sce[,<span class="sc">!</span>sce<span class="sc">$</span>Sample <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"donor5_recovery"</span>, <span class="st">"donor2_fat"</span>)]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sce_sub<span class="sc">$</span>Sample <span class="ot">&lt;-</span> sce_sub<span class="sc">$</span>Sample <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>abundances <span class="ot">&lt;-</span> <span class="fu">table</span>(sce_sub<span class="sc">$</span>cell_type_name, sce_sub<span class="sc">$</span>Sample)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>abundances <span class="ot">&lt;-</span> <span class="fu">unclass</span>(abundances)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>extra.info <span class="ot">&lt;-</span> <span class="fu">colData</span>(sce_sub)[<span class="fu">match</span>(<span class="fu">colnames</span>(abundances), sce_sub<span class="sc">$</span>Sample),]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>y.ab <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(abundances, <span class="at">samples=</span>extra.info)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span><span class="fu">factor</span>(donor) <span class="sc">+</span> <span class="fu">factor</span>(tissue), y.ab<span class="sc">$</span>samples)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>y.ab <span class="ot">&lt;-</span> <span class="fu">estimateDisp</span>(y.ab, design, <span class="at">trend=</span><span class="st">"none"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y.ab<span class="sc">$</span>common.dispersion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.2145  0.2145  0.2145  0.2145  0.2145  0.2145 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBCV</span>(y.ab, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="pb_de_files/figure-html/diff abundance-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit.ab <span class="ot">&lt;-</span> <span class="fu">glmQLFit</span>(y.ab, design, <span class="at">robust=</span><span class="cn">TRUE</span>, <span class="at">abundance.trend=</span><span class="cn">FALSE</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.ab<span class="sc">$</span>var.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.13    1.13    1.13    1.13    1.13    1.13 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.ab<span class="sc">$</span>df.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    Inf     Inf     Inf     Inf     Inf     Inf </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQLDisp</span>(fit.ab, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="pb_de_files/figure-html/diff abundance-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">glmQLFTest</span>(fit.ab, <span class="at">coef=</span><span class="fu">ncol</span>(design))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">decideTests</span>(res))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       factor(tissue)skin
+Down                    1
+NotSig                  6
+Up                      0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">topTags</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Coefficient:  factor(tissue)skin 
+                      logFC   logCPM           F      PValue       FDR
+5 collector     -1.67313387 15.71539 8.623966448 0.006566329 0.0459643
+1 capillary1     0.81379580 18.21660 2.916755948 0.098730096 0.3260354
+4 precollector2 -0.72111699 17.84314 2.310332539 0.139729459 0.3260354
+2 capillary2    -0.56425019 16.17506 1.237872565 0.275342782 0.4818499
+6 valve          0.31682058 16.22953 0.391258854 0.536703859 0.7513854
+7 proliferative  0.08138522 12.51469 0.012430808 0.912020407 0.9647903
+3 precollector1 -0.02076252 17.96845 0.001983791 0.964790283 0.9647903</code></pre>
+</div>
 </div>
 
 
