@@ -109,3 +109,31 @@ write.csv(tt, file.path("..", "out", "de", "pb_all.csv"))
 
 
 ```
+
+### Differential abundance
+
+```{r}
+#| label: diff abundance
+sce_sub <- sce[,!sce$Sample %in% c("donor5_recovery", "donor2_fat")]
+sce_sub$Sample <- sce_sub$Sample |> droplevels()
+abundances <- table(sce_sub$cell_type_name, sce_sub$Sample)
+abundances <- unclass(abundances)
+
+extra.info <- colData(sce_sub)[match(colnames(abundances), sce_sub$Sample),]
+y.ab <- DGEList(abundances, samples=extra.info)
+
+design <- model.matrix(~factor(donor) + factor(tissue), y.ab$samples)
+y.ab <- estimateDisp(y.ab, design, trend="none")
+summary(y.ab$common.dispersion)
+plotBCV(y.ab, cex=1)
+
+fit.ab <- glmQLFit(y.ab, design, robust=TRUE, abundance.trend=FALSE)
+summary(fit.ab$var.prior)
+summary(fit.ab$df.prior)
+plotQLDisp(fit.ab, cex=1)
+
+res <- glmQLFTest(fit.ab, coef=ncol(design))
+summary(decideTests(res))
+
+topTags(res)
+```
