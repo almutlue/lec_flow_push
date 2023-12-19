@@ -10,8 +10,10 @@ website:
       - about.qmd
       - text: "preprocessing"
         menu:
+          - code/convert_to_adata.ipynb
           - code/preprocessing_n_removal.ipynb
           - code/integration_n_clustering.ipynb
+          - code/clusters_markers.ipynb
       - text: "Differential expression"
         menu:
           - code/vis_de.qmd
