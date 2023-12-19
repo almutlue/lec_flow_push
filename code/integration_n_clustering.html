@@ -132,12 +132,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-preprocessing">    
         <li>
+    <a class="dropdown-item" href="../code/convert_to_adata.html" rel="" target="">
+ <span class="dropdown-text">convert_to_adata.html</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../code/preprocessing_n_removal.html" rel="" target="">
  <span class="dropdown-text">preprocessing_n_removal.html</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../code/integration_n_clustering.html" rel="" target="">
  <span class="dropdown-text">integration_n_clustering.html</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../code/clusters_markers.html" rel="" target="">
+ <span class="dropdown-text">clusters_markers.html</span></a>
   </li>  
     </ul>
   </li>
@@ -205,29 +213,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanorama</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> sparse, stats</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> colors</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, quantile_transform, maxabs_scale</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>sc.settings.set_figure_params(</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="dv">80</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    facecolor<span class="op">=</span><span class="st">"white"</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    frameon<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sc.settings.set_figure_params(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    dpi<span class="op">=</span><span class="dv">80</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    facecolor<span class="op">=</span><span class="st">"white"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    frameon<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>adata <span class="op">=</span> sc.read_h5ad(<span class="st">"../output/0.2-sce-after-contamination-removal.h5ad"</span>) <span class="co"># read adata</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>adata.obs <span class="op">=</span> adata.obs[[<span class="st">'Sample'</span>, <span class="st">'Barcode'</span>, <span class="st">'donor'</span>, <span class="st">'tissue'</span>, <span class="st">'tissue_origin'</span>, <span class="st">'sequencing_run'</span>, <span class="st">'sex'</span>]].astype(<span class="bu">str</span>) <span class="co"># take just the useful info</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sc.pp.calculate_qc_metrics(adata, inplace<span class="op">=</span><span class="va">True</span>) <span class="co"># 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', etc...</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>adata.obs.loc[adata.obs.donor<span class="op">==</span><span class="st">"5.0"</span>, <span class="st">"sex"</span>] <span class="op">=</span> <span class="st">"M"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>adata.obs.loc[adata.obs.donor<span class="op">==</span><span class="st">"7.0"</span>, <span class="st">"sex"</span>] <span class="op">=</span> <span class="st">"F"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>AnnData object with n_obs × n_vars = 21588 × 18627
     obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes'
     var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts'
@@ -235,12 +237,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     layers: 'logcounts'</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cells stratification</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>adata.obs.groupby([<span class="st">"sequencing_run"</span>, <span class="st">"donor"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])[[<span class="st">"Barcode"</span>]].count().replace(<span class="dv">0</span>, np.nan).dropna().astype(<span class="bu">int</span>).to_csv(<span class="st">"../output/1.0-cells_after_filtering.csv"</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>adata.obs.groupby([<span class="st">"sequencing_run"</span>, <span class="st">"donor"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])[[<span class="st">"Barcode"</span>]].count().replace(<span class="dv">0</span>, np.nan).dropna().astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -334,117 +336,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standardize logcounts and pca</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>adata.layers[<span class="st">"logcounts.scaled"</span>] <span class="op">=</span> sc.pp.scale(adata, zero_center<span class="op">=</span><span class="va">True</span>, max_value<span class="op">=</span><span class="va">None</span>, copy<span class="op">=</span><span class="va">True</span>, layer<span class="op">=</span><span class="st">"logcounts"</span>).layers[<span class="st">"logcounts"</span>]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>adata.obsm[<span class="st">"logcounts.scaled.pca"</span>] <span class="op">=</span> sc.pp.pca(adata.layers[<span class="st">"logcounts.scaled"</span>], svd_solver<span class="op">=</span><span class="st">"arpack"</span>, n_comps<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standardize logcounts</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>adata.layers[<span class="st">"logcounts.scaled"</span>] <span class="op">=</span> sc.pp.scale(adata, zero_center<span class="op">=</span><span class="va">True</span>, max_value<span class="op">=</span><span class="va">None</span>, copy<span class="op">=</span><span class="va">True</span>, layer<span class="op">=</span><span class="st">"logcounts"</span>).layers[<span class="st">"logcounts"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># first 2 PCs</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the neighbors graph (using the PCA representation) and the UMAP embedding</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(adata, use_rep<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, n_pcs<span class="op">=</span><span class="dv">20</span>, n_neighbors<span class="op">=</span><span class="dv">10</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.neighbors"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>adata.obsm[<span class="st">"logcounts.scaled.pca.neighbors.umap"</span>] <span class="op">=</span> sc.tl.umap(adata, neighbors_key<span class="op">=</span><span class="st">"logcounts.scaled.pca.neighbors"</span>, copy<span class="op">=</span><span class="va">True</span>).obsm[<span class="st">"X_umap"</span>]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/umap/distances.py:1063: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-  @numba.jit()
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/umap/distances.py:1071: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-  @numba.jit()
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/umap/distances.py:1086: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-  @numba.jit()
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/umap/umap_.py:660: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-  @numba.jit()</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>AnnData object with n_obs × n_vars = 21588 × 18627
-    obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes'
-    var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts'
-    uns: 'X_name', 'donor_colors', 'sequencing_run_colors', 'tissue_origin_colors', 'tissue_colors', 'logcounts.scaled.pca.neighbors'
-    obsm: 'logcounts.scaled.pca', 'logcounts.scaled.pca.neighbors.umap'
-    layers: 'logcounts', 'logcounts.scaled'
-    obsp: 'logcounts.scaled.pca.neighbors_distances', 'logcounts.scaled.pca.neighbors_connectivities'</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># UMAP embedding</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.neighbors.umap"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plt.hist(adata.obs.total_counts, bins<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"total count per cell"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plt.hist(adata.obs.log1p_total_counts, bins<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"total log1p-count per cell"</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.hist(adata.var.total_counts, bins<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"total count per gene"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plt.hist(adata.var.log1p_total_counts, bins<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"total log1p-count per gene"</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># zero-count cells, zero-count genes</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>(adata.obs.total_counts<span class="op">==</span><span class="dv">0</span>).<span class="bu">sum</span>(), (adata.var.total_counts<span class="op">==</span><span class="dv">0</span>).<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
-<pre><code>(0, 177)</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select the HVGs using pearson method</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>pearson_hvgs <span class="op">=</span> sc.experimental.pp.highly_variable_genes(adata, inplace<span class="op">=</span><span class="va">False</span>, batch_key<span class="op">=</span><span class="st">"donor"</span>, layer<span class="op">=</span><span class="va">None</span>, flavor<span class="op">=</span><span class="st">"pearson_residuals"</span>, n_top_genes<span class="op">=</span><span class="dv">500</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>pearson_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select the HVGs using pearson method</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>pearson_hvgs <span class="op">=</span> sc.experimental.pp.highly_variable_genes(adata, inplace<span class="op">=</span><span class="va">False</span>, batch_key<span class="op">=</span><span class="st">"donor"</span>, layer<span class="op">=</span><span class="va">None</span>, flavor<span class="op">=</span><span class="st">"pearson_residuals"</span>, n_top_genes<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pearson_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -579,65 +480,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>plt.colorbar(plt.scatter(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    pearson_hvgs.means, pearson_hvgs.variances,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">.5</span>, s<span class="op">=</span>pearson_hvgs.residual_variances<span class="op">*</span><span class="dv">10</span>, c<span class="op">=</span>np.log1p(pearson_hvgs.residual_variances),</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"spring_r"</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>), label<span class="op">=</span><span class="st">"log(residuals)"</span>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">"log"</span>)</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">"log"</span>)</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"mean"</span>)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"variance"</span>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plt.colorbar(plt.scatter(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    pearson_hvgs.means, pearson_hvgs.variances,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">.5</span>, s<span class="op">=</span>pearson_hvgs.residual_variances<span class="op">*</span><span class="dv">10</span>, c<span class="op">=</span>np.log1p(pearson_hvgs.residual_variances),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"spring_r"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>), label<span class="op">=</span><span class="st">"log(residuals)"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">"log"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">"log"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"mean"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"variance"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plt.colorbar(plt.scatter(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    pearson_hvgs.means, pearson_hvgs.variances,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">.25</span>, s<span class="op">=</span>pearson_hvgs.residual_variances<span class="op">*</span><span class="dv">10</span>, c<span class="op">=</span>pearson_hvgs.highly_variable_nbatches,</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"turbo"</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>), label<span class="op">=</span><span class="st">"number of batches"</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">"log"</span>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">"log"</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"mean"</span>)</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"variance"</span>)</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.colorbar(plt.scatter(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    pearson_hvgs.means, pearson_hvgs.variances,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">.25</span>, s<span class="op">=</span>pearson_hvgs.residual_variances<span class="op">*</span><span class="dv">10</span>, c<span class="op">=</span>pearson_hvgs.highly_variable_nbatches,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"turbo"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>), label<span class="op">=</span><span class="st">"number of batches"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.xscale(<span class="st">"log"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">"log"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"mean"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"variance"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"How many genes are highly valiable in at least n batches?"</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    np.arange(adata.obs.donor.nunique())<span class="op">+</span><span class="dv">1</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    (pearson_hvgs[[<span class="st">"highly_variable_nbatches"</span>]].values <span class="op">&gt;</span> np.arange(adata.obs.donor.nunique())[<span class="va">None</span>,:]).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>),</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    linewidth<span class="op">=</span><span class="dv">5</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"n genes"</span>)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"n batches"</span>)</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"How many genes are highly valiable in at least n batches?"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    np.arange(adata.obs.donor.nunique())<span class="op">+</span><span class="dv">1</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    (pearson_hvgs[[<span class="st">"highly_variable_nbatches"</span>]].values <span class="op">&gt;</span> np.arange(adata.obs.donor.nunique())[<span class="va">None</span>,:]).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    linewidth<span class="op">=</span><span class="dv">5</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"n genes"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"n batches"</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reading the LECs population and subpopulation markers</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>markers <span class="op">=</span> pd.read_csv(<span class="st">"../markers.csv"</span>, header<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>markers.columns <span class="op">=</span> [<span class="st">"gene_ID"</span>, <span class="st">"population"</span>, <span class="st">"population_ID"</span>, <span class="st">"positive"</span>, <span class="st">"known"</span>]</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>markers <span class="op">=</span> markers.loc[markers.population.<span class="bu">str</span>.match(<span class="st">".*LEC.*"</span>)]</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>markers[<span class="st">"positive"</span>] <span class="op">=</span> markers.positive<span class="op">==</span><span class="st">"positive"</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>markers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reading the LECs population and subpopulation markers</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>markers <span class="op">=</span> pd.read_csv(<span class="st">"../markers.csv"</span>, header<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>markers.columns <span class="op">=</span> [<span class="st">"gene_ID"</span>, <span class="st">"population"</span>, <span class="st">"population_ID"</span>, <span class="st">"positive"</span>, <span class="st">"known"</span>]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>markers <span class="op">=</span> markers.loc[markers.population.<span class="bu">str</span>.match(<span class="st">".*LEC.*"</span>)]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>markers[<span class="st">"positive"</span>] <span class="op">=</span> markers.positive<span class="op">==</span><span class="st">"positive"</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>markers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 
 
@@ -891,28 +792,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">121</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt.hist(np.log10(adata.var.n_cells_by_counts <span class="op">+</span><span class="dv">1</span>), bins<span class="op">=</span><span class="dv">100</span>, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"gene log variance"</span>)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"PDF"</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">122</span>)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.hist(np.log10(adata.var.n_cells_by_counts <span class="op">+</span><span class="dv">1</span>), bins<span class="op">=</span><span class="dv">100</span>, density<span class="op">=</span><span class="va">True</span>, cumulative<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"gene log variance"</span>)</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"CDF"</span>)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># selecting genes highly variable in at least 2 batches and markers</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (markers are not HVG, but we need them)</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>selected_hvgs <span class="op">=</span> pearson_hvgs[pearson_hvgs.highly_variable_nbatches<span class="op">&gt;=</span><span class="dv">2</span>].index.union(markers.gene_ID)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>selected_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="22">
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># selecting genes highly variable in at least 2 batches and markers</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (markers are not HVG, but we need them)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>selected_hvgs <span class="op">=</span> pearson_hvgs[pearson_hvgs.highly_variable_nbatches<span class="op">&gt;=</span><span class="dv">2</span>].index.union(markers.gene_ID)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>selected_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>Index(['ENSG00000003436.TFPI', 'ENSG00000004799.PDK4', 'ENSG00000005483.KMT2E',
        'ENSG00000007908.SELE', 'ENSG00000008083.JARID2',
        'ENSG00000008294.SPAG9', 'ENSG00000008405.CRY1', 'ENSG00000008517.IL32',
@@ -926,10 +812,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       dtype='object', length=675)</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>adata.var[<span class="st">"selected"</span>] <span class="op">=</span> adata.var.index.isin(selected_hvgs)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>adata.var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>adata.var[<span class="st">"selected"</span>] <span class="op">=</span> adata.var.index.isin(selected_hvgs)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>adata.var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -1100,1031 +986,125 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now working just on the HVGs</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs <span class="op">=</span> adata[:,adata.var.selected].copy()</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>sc.pp.calculate_qc_metrics(adata_hvgs, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now working just on the HVGs</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs <span class="op">=</span> adata[:,adata.var.selected].copy()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>sc.pp.calculate_qc_metrics(adata_hvgs, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>AnnData object with n_obs × n_vars = 21588 × 661
     obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes'
     var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts', 'selected'
-    uns: 'X_name', 'donor_colors', 'sequencing_run_colors', 'tissue_origin_colors', 'tissue_colors', 'logcounts.scaled.pca.neighbors'
-    obsm: 'logcounts.scaled.pca', 'logcounts.scaled.pca.neighbors.umap'
-    layers: 'logcounts', 'logcounts.scaled'
-    obsp: 'logcounts.scaled.pca.neighbors_distances', 'logcounts.scaled.pca.neighbors_connectivities'</code></pre>
+    uns: 'X_name'
+    layers: 'logcounts', 'logcounts.scaled'</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sc.pl.violin(adata_hvgs, [<span class="st">'n_genes_by_counts'</span>, <span class="st">'total_counts'</span>], jitter<span class="op">=</span><span class="fl">0.4</span>, multi_panel<span class="op">=</span><span class="va">True</span>, log<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-23-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">121</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>plt.hist(np.log10(adata_hvgs.var.n_cells_by_counts), bins<span class="op">=</span><span class="dv">100</span>, density<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"gene log variance"</span>)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"PDF"</span>)</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">122</span>)</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>plt.hist(np.log10(adata_hvgs.var.n_cells_by_counts), bins<span class="op">=</span><span class="dv">100</span>, density<span class="op">=</span><span class="va">True</span>, cumulative<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"gene log variance"</span>)</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"CDF"</span>)</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># HVGs PCA explained variance</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(svd_solver<span class="op">=</span><span class="st">"full"</span>).fit(adata_hvgs.layers[<span class="st">"logcounts.scaled"</span>])</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>plt.plot(np.cumsum(pca.explained_variance_ratio_))</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>plt.plot(pca.explained_variance_ratio_)</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-25-output-2.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>plt.plot(pca.explained_variance_ratio_[:<span class="dv">50</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recompute PCA, neighbors and UMAP just on HVGs</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.pca"</span>] <span class="op">=</span> sc.pp.pca(adata_hvgs.layers[<span class="st">"logcounts.scaled"</span>], svd_solver<span class="op">=</span><span class="st">"arpack"</span>, n_comps<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(adata_hvgs, use_rep<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, n_pcs<span class="op">=</span><span class="dv">100</span>, n_neighbors<span class="op">=</span><span class="dv">25</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.neighbors"</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.pca.neighbors.umap"</span>] <span class="op">=</span> sc.tl.umap(adata_hvgs, neighbors_key<span class="op">=</span><span class="st">"logcounts.scaled.pca.neighbors"</span>, copy<span class="op">=</span><span class="va">True</span>).obsm[<span class="st">"X_umap"</span>]</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute PCA, neighbors and UMAP just on HVGs</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.pca"</span>] <span class="op">=</span> sc.pp.pca(adata_hvgs.layers[<span class="st">"logcounts.scaled"</span>], svd_solver<span class="op">=</span><span class="st">"arpack"</span>, n_comps<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>AnnData object with n_obs × n_vars = 21588 × 661
     obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes'
     var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts', 'selected'
-    uns: 'X_name', 'donor_colors', 'sequencing_run_colors', 'tissue_origin_colors', 'tissue_colors', 'logcounts.scaled.pca.neighbors'
-    obsm: 'logcounts.scaled.pca', 'logcounts.scaled.pca.neighbors.umap'
-    layers: 'logcounts', 'logcounts.scaled'
-    obsp: 'logcounts.scaled.pca.neighbors_distances', 'logcounts.scaled.pca.neighbors_connectivities'</code></pre>
+    uns: 'X_name'
+    obsm: 'logcounts.scaled.pca'
+    layers: 'logcounts', 'logcounts.scaled'</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 PCs</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 PCs</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+<pre><code>/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-15-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># UMAP</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.neighbors.umap"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># harmony integration</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>sc.external.pp.harmony_integrate(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, key<span class="op">=</span><span class="st">"donor"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    adjusted_basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony"</span>, sigma<span class="op">=</span><span class="fl">1.</span> <span class="co">#hyperparameters: sigma.</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(</code></pre>
+<pre><code>2023-11-27 11:46:08,399 - harmonypy - INFO - Computing initial centroids with sklearn.KMeans...
+2023-11-27 11:46:15,279 - harmonypy - INFO - sklearn.KMeans initialization complete.
+2023-11-27 11:46:15,341 - harmonypy - INFO - Iteration 1 of 10
+2023-11-27 11:46:17,578 - harmonypy - INFO - Iteration 2 of 10
+2023-11-27 11:46:19,135 - harmonypy - INFO - Converged after 2 iterations</code></pre>
 </div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-29-output-2.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="39">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scanorama intergation</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>_out_scanorama <span class="op">=</span> scanorama.correct(</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    [adata_hvgs[adata_hvgs.obs.donor<span class="op">==</span>donor].copy().layers[<span class="st">"logcounts.scaled"</span>] <span class="cf">for</span> donor <span class="kw">in</span> adata_hvgs.obs.donor.unique()],</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    genes_list <span class="op">=</span> [adata_hvgs.var.index.to_list()]<span class="op">*</span>adata_hvgs.obs.donor.nunique(),</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    return_dimred<span class="op">=</span><span class="va">True</span>, knn<span class="op">=</span><span class="dv">40</span>, sigma<span class="op">=</span><span class="dv">20</span> <span class="co"># hyperparameters: knn, sigma</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>_out_scanorama</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Found 661 genes among all datasets
-[[0.         0.81853973 0.66376582 0.67298578 0.57528642 0.32293252
-  0.25418569]
- [0.         0.         0.80300633 0.28909953 0.24194703 0.43450251
-  0.26986399]
- [0.         0.         0.         0.63507109 0.65743671 0.8568038
-  0.56566456]
- [0.         0.         0.         0.         0.78515008 0.72511848
-  0.56398104]
- [0.         0.         0.         0.         0.         0.84260775
-  0.90507365]
- [0.         0.         0.         0.         0.         0.
-  0.94057875]
- [0.         0.         0.         0.         0.         0.
-  0.        ]]
-Processing datasets (5, 6)
-Processing datasets (4, 6)
-Processing datasets (2, 5)
-Processing datasets (4, 5)
-Processing datasets (0, 1)
-Processing datasets (1, 2)
-Processing datasets (3, 4)
-Processing datasets (3, 5)
-Processing datasets (0, 3)
-Processing datasets (0, 2)
-Processing datasets (2, 4)
-Processing datasets (2, 3)
-Processing datasets (0, 4)
-Processing datasets (2, 6)
-Processing datasets (3, 6)
-Processing datasets (1, 5)
-Processing datasets (0, 5)
-Processing datasets (1, 3)
-Processing datasets (1, 6)
-Processing datasets (0, 6)
-Processing datasets (1, 4)</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="39">
-<pre><code>([array([[ 0.15499599,  0.06518975, -0.01299546, ...,  0.02788879,
-          -0.03987133, -0.00690037],
-         [-0.29755602,  0.19157411,  0.13257315, ...,  0.0442807 ,
-          -0.00492444, -0.01317647],
-         [-0.22754984,  0.0381117 ,  0.05283327, ..., -0.00977411,
-           0.0061749 ,  0.01003503],
-         ...,
-         [ 0.14433898,  0.2337615 , -0.00384419, ...,  0.11232922,
-           0.00169593,  0.0090357 ],
-         [-0.24651929, -0.01847732, -0.00705104, ..., -0.03045652,
-           0.00324885,  0.04252008],
-         [-0.01052221,  0.0394253 , -0.01300106, ..., -0.03162768,
-           0.01625904, -0.01664504]]),
-  array([[-0.06234173, -0.06557873,  0.04186698, ...,  0.04546896,
-           0.04436917, -0.00609741],
-         [-0.2686676 ,  0.0521724 ,  0.06564512, ..., -0.02829906,
-           0.00054603,  0.01064134],
-         [-0.09798006,  0.11487086,  0.02689218, ...,  0.0173614 ,
-          -0.06372137, -0.01508645],
-         ...,
-         [-0.15823784, -0.14843606,  0.01756423, ..., -0.01177048,
-           0.00510066,  0.02638219],
-         [-0.32701807,  0.12204812,  0.07459577, ..., -0.01325339,
-          -0.00540898,  0.00482282],
-         [-0.28177148, -0.03915433,  0.06508979, ..., -0.02300479,
-           0.01643855, -0.01600262]]),
-  array([[ 0.15855013,  0.00203635,  0.19450258, ...,  0.01839163,
-          -0.01763088,  0.0244716 ],
-         [-0.1931036 , -0.03984173,  0.08583574, ..., -0.00956667,
-          -0.00171763,  0.04041452],
-         [-0.07287734, -0.17525359, -0.0844985 , ...,  0.00575027,
-           0.01310534,  0.0294322 ],
-         ...,
-         [-0.11932868,  0.07481472,  0.09818116, ...,  0.02770809,
-           0.00372633, -0.00687399],
-         [ 0.09159832,  0.17031501, -0.18619418, ...,  0.04626286,
-          -0.01744314,  0.07969091],
-         [ 0.51540154,  0.18906866,  0.07322843, ...,  0.01877629,
-          -0.00865021,  0.02807046]]),
-  array([[ 0.35435499,  0.18952807,  0.0521938 , ...,  0.02130831,
-          -0.003861  , -0.00726706],
-         [ 0.05861867, -0.20627038,  0.01610541, ...,  0.02774822,
-          -0.0147005 ,  0.02692575],
-         [ 0.30071941, -0.03627409,  0.09865203, ...,  0.03162814,
-           0.02063437, -0.01746373],
-         ...,
-         [ 0.06761111,  0.03725269,  0.042627  , ...,  0.02982114,
-          -0.02569161, -0.01255272],
-         [ 0.14553303,  0.16727045, -0.12152161, ...,  0.00094646,
-           0.02357648,  0.01319848],
-         [-0.11781027,  0.03118317, -0.03845329, ..., -0.02707633,
-          -0.04831128,  0.03119572]]),
-  array([[ 0.09529602, -0.04811884, -0.01376854, ..., -0.05904311,
-          -0.0358609 , -0.02399296],
-         [ 0.08800763,  0.18083561, -0.05354871, ..., -0.00443724,
-          -0.04889987,  0.00621034],
-         [-0.00214632, -0.15293116,  0.00732098, ..., -0.0110359 ,
-          -0.00411143, -0.01476358],
-         ...,
-         [ 0.33108737,  0.24439312,  0.15594851, ..., -0.03048401,
-          -0.01337788,  0.03782634],
-         [ 0.05147973,  0.05133062, -0.02328434, ...,  0.0155306 ,
-           0.04861371, -0.01319355],
-         [ 0.08537502, -0.12033448, -0.05204537, ..., -0.02703678,
-          -0.06020824,  0.02002191]]),
-  array([[-0.15713895,  0.1629033 ,  0.02856795, ..., -0.00108895,
-           0.00348774, -0.02131382],
-         [ 0.51057405,  0.07136083,  0.20390466, ...,  0.01064401,
-          -0.00794195, -0.00721427],
-         [ 0.1781464 , -0.05422093, -0.02037077, ...,  0.03953636,
-          -0.0009756 ,  0.03721557],
-         ...,
-         [ 0.02867076,  0.18376819, -0.17998279, ...,  0.01210207,
-           0.02445995, -0.03547943],
-         [-0.03821302,  0.18921294, -0.11779424, ..., -0.06068977,
-           0.0230536 , -0.01822293],
-         [ 0.10820627, -0.09501749, -0.02832867, ...,  0.03718959,
-          -0.00985695, -0.00255919]]),
-  array([[ 0.35163479, -0.09545828, -0.03182212, ...,  0.03719322,
-          -0.07762674, -0.01355305],
-         [ 0.04723867, -0.08516124,  0.00125534, ..., -0.00996006,
-          -0.01649926,  0.0217293 ],
-         [ 0.16606219,  0.14966646, -0.18417494, ..., -0.00180196,
-          -0.03255265, -0.01700102],
-         ...,
-         [ 0.44644608,  0.21265846, -0.01797266, ...,  0.03048696,
-          -0.01499321,  0.00058349],
-         [-0.27040636,  0.11308834,  0.17384138, ..., -0.07102673,
-          -0.0418337 , -0.00358643],
-         [ 0.0762948 , -0.06536989,  0.17216896, ...,  0.06715966,
-          -0.05500113, -0.01419761]])],
- [&lt;3942x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 2605662 stored elements in Compressed Sparse Row format&gt;,
-  &lt;2794x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 1846834 stored elements in Compressed Sparse Row format&gt;,
-  &lt;1264x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 835504 stored elements in Compressed Sparse Row format&gt;,
-  &lt;633x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 418413 stored elements in Compressed Sparse Row format&gt;,
-  &lt;3666x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 2423226 stored elements in Compressed Sparse Row format&gt;,
-  &lt;4527x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 2992347 stored elements in Compressed Sparse Row format&gt;,
-  &lt;4762x661 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
-    with 3147682 stored elements in Compressed Sparse Row format&gt;],
- array(['ENSG00000003436.TFPI', 'ENSG00000004799.PDK4',
-        'ENSG00000005483.KMT2E', 'ENSG00000007908.SELE',
-        'ENSG00000008083.JARID2', 'ENSG00000008294.SPAG9',
-        'ENSG00000008405.CRY1', 'ENSG00000008517.IL32',
-        'ENSG00000008988.RPS20', 'ENSG00000009413.REV3L',
-        'ENSG00000010278.CD9', 'ENSG00000010803.SCMH1',
-        'ENSG00000010818.HIVEP2', 'ENSG00000011114.BTBD7',
-        'ENSG00000011465.DCN', 'ENSG00000011600.TYROBP',
-        'ENSG00000013297.CLDN11', 'ENSG00000017427.IGF1',
-        'ENSG00000018408.WWTR1', 'ENSG00000019582.CD74',
-        'ENSG00000019991.HGF', 'ENSG00000020577.SAMD4A',
-        'ENSG00000021355.SERPINB1', 'ENSG00000021645.NRXN3',
-        'ENSG00000023445.BIRC3', 'ENSG00000026025.VIM',
-        'ENSG00000026508.CD44', 'ENSG00000033867.SLC4A7',
-        'ENSG00000034510.TMSB10', 'ENSG00000038295.TLL1',
-        'ENSG00000038382.TRIO', 'ENSG00000038945.MSR1',
-        'ENSG00000041982.TNC', 'ENSG00000043462.LCP2',
-        'ENSG00000047617.ANO2', 'ENSG00000048740.CELF2',
-        'ENSG00000049192.ADAMTS6', 'ENSG00000058085.LAMC2',
-        'ENSG00000059758.CDK17', 'ENSG00000059804.SLC2A3',
-        'ENSG00000060140.STYK1', 'ENSG00000063177.RPL18',
-        'ENSG00000064651.SLC12A2', 'ENSG00000064989.CALCRL',
-        'ENSG00000067082.KLF6', 'ENSG00000067113.PLPP1',
-        'ENSG00000067141.NEO1', 'ENSG00000067715.SYT1',
-        'ENSG00000067798.NAV3', 'ENSG00000069667.RORA',
-        'ENSG00000071205.ARHGAP10', 'ENSG00000073756.PTGS2',
-        'ENSG00000073921.PICALM', 'ENSG00000074181.NOTCH3',
-        'ENSG00000074527.NTN4', 'ENSG00000075213.SEMA3A',
-        'ENSG00000075391.RASAL2', 'ENSG00000075420.FNDC3B',
-        'ENSG00000075624.ACTB', 'ENSG00000076706.MCAM',
-        'ENSG00000077522.ACTN2', 'ENSG00000077942.FBLN1',
-        'ENSG00000078269.SYNJ2', 'ENSG00000078401.EDN1',
-        'ENSG00000080824.HSP90AA1', 'ENSG00000081041.CXCL2',
-        'ENSG00000084112.SSH1', 'ENSG00000085276.MECOM',
-        'ENSG00000086061.DNAJA1', 'ENSG00000086619.ERO1B',
-        'ENSG00000087086.FTL', 'ENSG00000089009.RPL6',
-        'ENSG00000090104.RGS1', 'ENSG00000090339.ICAM1',
-        'ENSG00000090905.TNRC6A', 'ENSG00000091879.ANGPT2',
-        'ENSG00000091986.CCDC80', 'ENSG00000092841.MYL6',
-        'ENSG00000092969.TGFB2', 'ENSG00000095637.SORBS1',
-        'ENSG00000095951.HIVEP1', 'ENSG00000096384.HSP90AB1',
-        'ENSG00000099250.NRP1', 'ENSG00000099260.PALMD',
-        'ENSG00000099860.GADD45B', 'ENSG00000100097.LGALS1',
-        'ENSG00000100191.SLC5A4', 'ENSG00000100234.TIMP3',
-        'ENSG00000100292.HMOX1', 'ENSG00000100311.PDGFB',
-        'ENSG00000100906.NFKBIA', 'ENSG00000101004.NINL',
-        'ENSG00000101096.NFATC2', 'ENSG00000101335.MYL9',
-        'ENSG00000101439.CST3', 'ENSG00000102003.SYP',
-        'ENSG00000102053.ZC3H12B', 'ENSG00000102265.TIMP1',
-        'ENSG00000102271.KLHL4', 'ENSG00000102547.CAB39L',
-        'ENSG00000102755.FLT1', 'ENSG00000102760.RGCC',
-        'ENSG00000102786.INTS6', 'ENSG00000102908.NFAT5',
-        'ENSG00000103196.CRISPLD2', 'ENSG00000103335.PIEZO1',
-        'ENSG00000104112.SCG3', 'ENSG00000104368.PLAT',
-        'ENSG00000105372.RPS19', 'ENSG00000105640.RPL18A',
-        'ENSG00000105697.HAMP', 'ENSG00000105810.CDK6',
-        'ENSG00000105835.NAMPT', 'ENSG00000105889.STEAP1B',
-        'ENSG00000105974.CAV1', 'ENSG00000106211.HSPB1',
-        'ENSG00000106305.AIMP2', 'ENSG00000106366.SERPINE1',
-        'ENSG00000106511.MEOX2', 'ENSG00000106665.CLIP2',
-        'ENSG00000107249.GLIS3', 'ENSG00000107317.PTGDS',
-        'ENSG00000107562.CXCL12', 'ENSG00000107796.ACTA2',
-        'ENSG00000108107.RPL28', 'ENSG00000108298.RPL19',
-        'ENSG00000108342.CSF3', 'ENSG00000108691.CCL2',
-        'ENSG00000109320.NFKB1', 'ENSG00000109321.AREG',
-        'ENSG00000109436.TBC1D9', 'ENSG00000109475.RPL34',
-        'ENSG00000109756.RAPGEF2', 'ENSG00000109846.CRYAB',
-        'ENSG00000110492.MDK', 'ENSG00000110700.RPS13',
-        'ENSG00000110841.PPFIBP1', 'ENSG00000110848.CD69',
-        'ENSG00000110852.CLEC2B', 'ENSG00000111057.KRT18',
-        'ENSG00000111341.MGP', 'ENSG00000111404.RERGL',
-        'ENSG00000111640.GAPDH', 'ENSG00000111885.MAN1A1',
-        'ENSG00000111962.UST', 'ENSG00000112306.RPS12',
-        'ENSG00000112531.QKI', 'ENSG00000112851.ERBIN',
-        'ENSG00000113273.ARSB', 'ENSG00000113448.PDE4D',
-        'ENSG00000113810.SMC4', 'ENSG00000114315.HES1',
-        'ENSG00000114423.CBLB', 'ENSG00000114480.GBE1',
-        'ENSG00000115252.PDE1A', 'ENSG00000115268.RPS15',
-        'ENSG00000115380.EFEMP1', 'ENSG00000115414.FN1',
-        'ENSG00000115419.GLS', 'ENSG00000115457.IGFBP2',
-        'ENSG00000115461.IGFBP5', 'ENSG00000115738.ID2',
-        'ENSG00000115758.ODC1', 'ENSG00000115963.RND3',
-        'ENSG00000116117.PARD3B', 'ENSG00000116132.PRRX1',
-        'ENSG00000116741.RGS2', 'ENSG00000117318.ID3',
-        'ENSG00000117461.PIK3R3', 'ENSG00000117707.PROX1',
-        'ENSG00000117724.CENPF', 'ENSG00000118217.ATF6',
-        'ENSG00000118473.SGIP1', 'ENSG00000118503.TNFAIP3',
-        'ENSG00000118515.SGK1', 'ENSG00000118523.CCN2',
-        'ENSG00000118596.SLC16A7', 'ENSG00000118689.FOXO3',
-        'ENSG00000118985.ELL2', 'ENSG00000119771.KLHL29',
-        'ENSG00000120129.DUSP1', 'ENSG00000120278.PLEKHG1',
-        'ENSG00000120594.PLXDC2', 'ENSG00000120658.ENOX1',
-        'ENSG00000120694.HSPH1', 'ENSG00000120738.EGR1',
-        'ENSG00000120885.CLU', 'ENSG00000121101.TEX14',
-        'ENSG00000121966.CXCR4', 'ENSG00000122026.RPL21',
-        'ENSG00000122254.HS3ST2', 'ENSG00000122591.FAM126A',
-        'ENSG00000122644.ARL4A', 'ENSG00000122691.TWIST1',
-        'ENSG00000122862.SRGN', 'ENSG00000123358.NR4A1',
-        'ENSG00000123416.TUBA1B', 'ENSG00000123610.TNFAIP6',
-        'ENSG00000123689.G0S2', 'ENSG00000123700.KCNJ2',
-        'ENSG00000124172.ATP5F1E', 'ENSG00000124762.CDKN1A',
-        'ENSG00000124766.SOX4', 'ENSG00000124935.SCGB1D2',
-        'ENSG00000125148.MT2A', 'ENSG00000125257.ABCC4',
-        'ENSG00000125347.IRF1', 'ENSG00000125691.RPL23',
-        'ENSG00000125730.C3', 'ENSG00000125740.FOSB',
-        'ENSG00000125868.DSTN', 'ENSG00000125968.ID1',
-        'ENSG00000126583.PRKCG', 'ENSG00000126709.IFI6',
-        'ENSG00000126785.RHOJ', 'ENSG00000127528.KLF2',
-        'ENSG00000127920.GNG11', 'ENSG00000127951.FGL2',
-        'ENSG00000127954.STEAP4', 'ENSG00000128016.ZFP36',
-        'ENSG00000128573.FOXP2', 'ENSG00000129048.ACKR4',
-        'ENSG00000129538.RNASE1', 'ENSG00000129682.FGF13',
-        'ENSG00000130066.SAT1', 'ENSG00000130203.APOE',
-        'ENSG00000130255.RPL36', 'ENSG00000130300.PLVAP',
-        'ENSG00000130303.BST2', 'ENSG00000130304.SLC27A1',
-        'ENSG00000130449.ZSWIM6', 'ENSG00000130513.GDF15',
-        'ENSG00000130522.JUND', 'ENSG00000131016.AKAP12',
-        'ENSG00000131018.SYNE1', 'ENSG00000131477.RAMP2',
-        'ENSG00000132002.DNAJB1', 'ENSG00000132003.ZSWIM4',
-        'ENSG00000132386.SERPINF1', 'ENSG00000132466.ANKRD17',
-        'ENSG00000132475.H3-3B', 'ENSG00000132965.ALOX5AP',
-        'ENSG00000133065.SLC41A1', 'ENSG00000133110.POSTN',
-        'ENSG00000133112.TPT1', 'ENSG00000133316.WDR74',
-        'ENSG00000133392.MYH11', 'ENSG00000133454.MYO18B',
-        'ENSG00000133636.NTS', 'ENSG00000133687.TMTC1',
-        'ENSG00000133800.LYVE1', 'ENSG00000133805.AMPD3',
-        'ENSG00000133962.CATSPERB', 'ENSG00000134215.VAV3',
-        'ENSG00000134245.WNT2B', 'ENSG00000134294.SLC38A2',
-        'ENSG00000134363.FST', 'ENSG00000134419.RPS15A',
-        'ENSG00000134443.GRP', 'ENSG00000134531.EMP1',
-        'ENSG00000134532.SOX5', 'ENSG00000134533.RERG',
-        'ENSG00000134539.KLRD1', 'ENSG00000135046.ANXA1',
-        'ENSG00000135048.CEMIP2', 'ENSG00000135218.CD36',
-        'ENSG00000135346.CGA', 'ENSG00000135480.KRT7',
-        'ENSG00000135540.NHSL1', 'ENSG00000135828.RNASEL',
-        'ENSG00000135862.LAMC1', 'ENSG00000135905.DOCK10',
-        'ENSG00000136011.STAB2', 'ENSG00000136156.ITM2B',
-        'ENSG00000136244.IL6', 'ENSG00000136810.TXN',
-        'ENSG00000136826.KLF4', 'ENSG00000136997.MYC',
-        'ENSG00000137075.RNF38', 'ENSG00000137077.CCL21',
-        'ENSG00000137154.RPS6', 'ENSG00000137331.IER3',
-        'ENSG00000137801.THBS1', 'ENSG00000137818.RPLP1',
-        'ENSG00000138081.FBXO11', 'ENSG00000138135.CH25H',
-        'ENSG00000138326.RPS24', 'ENSG00000138378.STAT4',
-        'ENSG00000138411.HECW2', 'ENSG00000138448.ITGAV',
-        'ENSG00000138639.ARHGAP24', 'ENSG00000138722.MMRN1',
-        'ENSG00000138780.GSTCD', 'ENSG00000138795.LEF1',
-        'ENSG00000139144.PIK3C2G', 'ENSG00000139160.ETFBKMT',
-        'ENSG00000139318.DUSP6', 'ENSG00000139329.LUM',
-        'ENSG00000139946.PELI2', 'ENSG00000140945.CDH13',
-        'ENSG00000140988.RPS2', 'ENSG00000141506.PIK3R5',
-        'ENSG00000142089.IFITM3', 'ENSG00000142207.URB1',
-        'ENSG00000142599.RERE', 'ENSG00000142676.RPL11',
-        'ENSG00000142871.CCN1', 'ENSG00000142937.RPS8',
-        'ENSG00000143196.DPT', 'ENSG00000143248.RGS5',
-        'ENSG00000143333.RGS16', 'ENSG00000143341.HMCN1',
-        'ENSG00000143947.RPS27A', 'ENSG00000144278.GALNT13',
-        'ENSG00000144476.ACKR3', 'ENSG00000144619.CNTN4',
-        'ENSG00000144642.RBMS3', 'ENSG00000144668.ITGA9',
-        'ENSG00000144713.RPL32', 'ENSG00000144724.PTPRG',
-        'ENSG00000144824.PHLDB2', 'ENSG00000145147.SLIT2',
-        'ENSG00000145425.RPS3A', 'ENSG00000145569.OTULINL',
-        'ENSG00000145592.RPL37', 'ENSG00000145687.SSBP2',
-        'ENSG00000145819.ARHGAP26', 'ENSG00000145824.CXCL14',
-        'ENSG00000146426.TIAM2', 'ENSG00000146592.CREB5',
-        'ENSG00000146648.EGFR', 'ENSG00000147403.RPL10',
-        'ENSG00000147459.DOCK5', 'ENSG00000148053.NTRK2',
-        'ENSG00000148498.PARD3', 'ENSG00000148516.ZEB1',
-        'ENSG00000148655.LRMDA', 'ENSG00000148671.ADIRF',
-        'ENSG00000148773.MKI67', 'ENSG00000148926.ADM',
-        'ENSG00000149100.EIF3M', 'ENSG00000149273.RPS3',
-        'ENSG00000149564.ESAM', 'ENSG00000149591.TAGLN',
-        'ENSG00000149806.FAU', 'ENSG00000150054.MPP7',
-        'ENSG00000150625.GPM6A', 'ENSG00000150672.DLG2',
-        'ENSG00000150907.FOXO1', 'ENSG00000150991.UBC',
-        'ENSG00000151276.MAGI1', 'ENSG00000151322.NPAS3',
-        'ENSG00000151468.CCDC3', 'ENSG00000151491.EPS8',
-        'ENSG00000151632.AKR1C2', 'ENSG00000151746.BICD1',
-        'ENSG00000151789.ZNF385D', 'ENSG00000151914.DST',
-        'ENSG00000152413.HOMER1', 'ENSG00000152518.ZFP36L2',
-        'ENSG00000152583.SPARCL1', 'ENSG00000152601.MBNL1',
-        'ENSG00000152818.UTRN', 'ENSG00000152894.PTPRK',
-        'ENSG00000152953.STK32B', 'ENSG00000153283.CD96',
-        'ENSG00000153317.ASAP1', 'ENSG00000153721.CNKSR3',
-        'ENSG00000153993.SEMA3D', 'ENSG00000154122.ANKH',
-        'ENSG00000154217.PITPNC1', 'ENSG00000154330.PGM5',
-        'ENSG00000154556.SORBS2', 'ENSG00000154645.CHODL',
-        'ENSG00000154734.ADAMTS1', 'ENSG00000154736.ADAMTS5',
-        'ENSG00000154864.PIEZO2', 'ENSG00000155657.TTN',
-        'ENSG00000155849.ELMO1', 'ENSG00000155886.SLC24A2',
-        'ENSG00000156049.GNA14', 'ENSG00000156140.ADAMTS3',
-        'ENSG00000156482.RPL30', 'ENSG00000156508.EEF1A1',
-        'ENSG00000156639.ZFAND3', 'ENSG00000157168.NRG1',
-        'ENSG00000157483.MYO1E', 'ENSG00000157540.DYRK1A',
-        'ENSG00000157654.PALM2AKAP2', 'ENSG00000157764.BRAF',
-        'ENSG00000157827.FMNL2', 'ENSG00000158050.DUSP2',
-        'ENSG00000158321.AUTS2', 'ENSG00000158859.ADAMTS4',
-        'ENSG00000158869.FCER1G', 'ENSG00000159167.STC1',
-        'ENSG00000159200.RCAN1', 'ENSG00000159713.TPPP3',
-        'ENSG00000160145.KALRN', 'ENSG00000160180.TFF3',
-        'ENSG00000160584.SIK3', 'ENSG00000160789.LMNA',
-        'ENSG00000160888.IER2', 'ENSG00000161011.SQSTM1',
-        'ENSG00000161016.RPL8', 'ENSG00000161970.RPL26',
-        'ENSG00000162244.RPL29', 'ENSG00000162267.ITIH3',
-        'ENSG00000162493.PDPN', 'ENSG00000162510.MATN1',
-        'ENSG00000162618.ADGRL4', 'ENSG00000162687.KCNT2',
-        'ENSG00000162772.ATF3', 'ENSG00000163191.S100A11',
-        'ENSG00000163273.NPPC', 'ENSG00000163359.COL6A3',
-        'ENSG00000163453.IGFBP7', 'ENSG00000163492.CCDC141',
-        'ENSG00000163638.ADAMTS9', 'ENSG00000163661.PTX3',
-        'ENSG00000163682.RPL9', 'ENSG00000163687.DNASE1L3',
-        'ENSG00000163734.CXCL3', 'ENSG00000163739.CXCL1',
-        'ENSG00000163815.CLEC3B', 'ENSG00000163964.PIGX',
-        'ENSG00000164032.H2AZ1', 'ENSG00000164056.SPRY1',
-        'ENSG00000164116.GUCY1A1', 'ENSG00000164176.EDIL3',
-        'ENSG00000164442.CITED2', 'ENSG00000164512.ANKRD55',
-        'ENSG00000164587.RPS14', 'ENSG00000164687.FABP5',
-        'ENSG00000164692.COL1A2', 'ENSG00000164736.SOX17',
-        'ENSG00000164949.GEM', 'ENSG00000165124.SVEP1',
-        'ENSG00000165309.ARMC3', 'ENSG00000165379.LRFN5',
-        'ENSG00000165507.DEPP1', 'ENSG00000165714.BORCS5',
-        'ENSG00000165810.BTNL9', 'ENSG00000165949.IFI27',
-        'ENSG00000166105.GLB1L3', 'ENSG00000166441.RPL27A',
-        'ENSG00000166482.MFAP4', 'ENSG00000166592.RRAD',
-        'ENSG00000166598.HSP90B1', 'ENSG00000166710.B2M',
-        'ENSG00000166741.NNMT', 'ENSG00000166833.NAV2',
-        'ENSG00000166974.MAPRE2', 'ENSG00000167081.PBX3',
-        'ENSG00000167244.IGF2', 'ENSG00000167526.RPL13',
-        'ENSG00000167552.TUBA1A', 'ENSG00000167693.NXN',
-        'ENSG00000167779.IGFBP6', 'ENSG00000167996.FTH1',
-        'ENSG00000168209.DDIT4', 'ENSG00000168386.FILIP1L',
-        'ENSG00000168497.CAVIN2', 'ENSG00000168509.HJV',
-        'ENSG00000168542.COL3A1', 'ENSG00000168675.LDLRAD4',
-        'ENSG00000169126.ODAD2', 'ENSG00000169282.KCNAB1',
-        'ENSG00000169429.CXCL8', 'ENSG00000169442.CD52',
-        'ENSG00000169508.GPR183', 'ENSG00000169554.ZEB2',
-        'ENSG00000169715.MT1E', 'ENSG00000169744.LDB2',
-        'ENSG00000169908.TM4SF1', 'ENSG00000169946.ZFPM2',
-        'ENSG00000170017.ALCAM', 'ENSG00000170323.FABP4',
-        'ENSG00000170345.FOS', 'ENSG00000170776.AKAP13',
-        'ENSG00000170921.TANC2', 'ENSG00000170961.HAS2',
-        'ENSG00000171132.PRKCE', 'ENSG00000171223.JUNB',
-        'ENSG00000171236.LRG1', 'ENSG00000171408.PDE7B',
-        'ENSG00000171848.RRM2', 'ENSG00000171858.RPS21',
-        'ENSG00000171863.RPS7', 'ENSG00000171988.JMJD1C',
-        'ENSG00000172260.NEGR1', 'ENSG00000172264.MACROD2',
-        'ENSG00000172554.SNTG2', 'ENSG00000172817.CYP7B1',
-        'ENSG00000173110.HSPA6', 'ENSG00000173227.SYT12',
-        'ENSG00000173262.SLC2A14', 'ENSG00000173267.SNCG',
-        'ENSG00000173320.STOX2', 'ENSG00000173482.PTPRM',
-        'ENSG00000173517.PEAK1', 'ENSG00000173812.EIF1',
-        'ENSG00000173926.MARCHF3', 'ENSG00000174327.SLC16A13',
-        'ENSG00000174485.DENND4A', 'ENSG00000175161.CADM2',
-        'ENSG00000175198.PCCA', 'ENSG00000175471.MCTP1',
-        'ENSG00000175745.NR2F1', 'ENSG00000176890.TYMS',
-        'ENSG00000177606.JUN', 'ENSG00000177694.NAALADL2',
-        'ENSG00000177954.RPS27', 'ENSG00000178175.ZNF366',
-        'ENSG00000178538.CA8', 'ENSG00000178573.MAF',
-        'ENSG00000178726.THBD', 'ENSG00000178878.APOLD1',
-        'ENSG00000178971.CTC1', 'ENSG00000179097.HTR1F',
-        'ENSG00000179144.GIMAP7', 'ENSG00000179344.HLA-DQB1',
-        'ENSG00000180509.KCNE1', 'ENSG00000181026.AEN',
-        'ENSG00000181195.PENK', 'ENSG00000181649.PHLDA2',
-        'ENSG00000181722.ZBTB20', 'ENSG00000182050.MGAT4C',
-        'ENSG00000182141.ZNF708', 'ENSG00000182197.EXT1',
-        'ENSG00000182463.TSHZ2', 'ENSG00000182732.RGS6',
-        'ENSG00000182866.LCK', 'ENSG00000182899.RPL35A',
-        'ENSG00000183153.GJD3', 'ENSG00000183486.MX2',
-        'ENSG00000183580.FBXL7', 'ENSG00000183722.LHFPL6',
-        'ENSG00000184005.ST6GALNAC3', 'ENSG00000184009.ACTG1',
-        'ENSG00000184113.CLDN5', 'ENSG00000184305.CCSER1',
-        'ENSG00000184347.SLIT3', 'ENSG00000184349.EFNA5',
-        'ENSG00000184384.MAML2', 'ENSG00000184454.NCMAP',
-        'ENSG00000184557.SOCS3', 'ENSG00000184635.ZNF93',
-        'ENSG00000184985.SORCS2', 'ENSG00000185008.ROBO2',
-        'ENSG00000185046.ANKS1B', 'ENSG00000185070.FLRT2',
-        'ENSG00000185305.ARL15', 'ENSG00000185352.HS6ST3',
-        'ENSG00000185532.PRKG1', 'ENSG00000185633.NDUFA4L2',
-        'ENSG00000185650.ZFP36L1', 'ENSG00000185737.NRG3',
-        'ENSG00000185880.TRIM69', 'ENSG00000185885.IFITM1',
-        'ENSG00000186094.AGBL4', 'ENSG00000186153.WWOX',
-        'ENSG00000186187.ZNRF1', 'ENSG00000186468.RPS23',
-        'ENSG00000186806.VSIG10L', 'ENSG00000187134.AKR1C1',
-        'ENSG00000187193.MT1X', 'ENSG00000187391.MAGI2',
-        'ENSG00000187479.C11orf96', 'ENSG00000187513.GJA4',
-        'ENSG00000187514.PTMA', 'ENSG00000187608.ISG15',
-        'ENSG00000187720.THSD4', 'ENSG00000188257.PLA2G2A',
-        'ENSG00000188517.COL25A1', 'ENSG00000188536.HBA2',
-        'ENSG00000188559.RALGAPA2', 'ENSG00000188897.ENSG00000188897',
-        'ENSG00000189056.RELN', 'ENSG00000189058.APOD',
-        'ENSG00000189090.FAM25G', 'ENSG00000189129.PLAC9',
-        'ENSG00000189283.FHIT', 'ENSG00000189292.ALKAL2',
-        'ENSG00000196126.HLA-DRB1', 'ENSG00000196154.S100A4',
-        'ENSG00000196189.SEMA4A', 'ENSG00000196428.TSC22D2',
-        'ENSG00000196569.LAMA2', 'ENSG00000196628.TCF4',
-        'ENSG00000196735.HLA-DQA1', 'ENSG00000197019.SERTAD1',
-        'ENSG00000197061.H4C3', 'ENSG00000197329.PELI1',
-        'ENSG00000197555.SIPA1L1', 'ENSG00000197728.RPS26',
-        'ENSG00000197747.S100A10', 'ENSG00000197756.RPL37A',
-        'ENSG00000197766.CFD', 'ENSG00000197943.PLCG2',
-        'ENSG00000197956.S100A6', 'ENSG00000197958.RPL12',
-        'ENSG00000198034.RPS4X', 'ENSG00000198108.CHSY3',
-        'ENSG00000198216.CACNA1E', 'ENSG00000198467.TPM2',
-        'ENSG00000198502.HLA-DRB5', 'ENSG00000198542.ITGBL1',
-        'ENSG00000198604.BAZ1A', 'ENSG00000198626.RYR2',
-        'ENSG00000198668.CALM1', 'ENSG00000198794.SCAMP5',
-        'ENSG00000198853.RUSC2', 'ENSG00000198918.RPL39',
-        'ENSG00000203727.SAMD5', 'ENSG00000203883.SOX18',
-        'ENSG00000204217.BMPR2', 'ENSG00000204287.HLA-DRA',
-        'ENSG00000204291.COL15A1', 'ENSG00000204311.PJVK',
-        'ENSG00000204388.HSPA1B', 'ENSG00000204389.HSPA1A',
-        'ENSG00000204442.NALF1', 'ENSG00000204472.AIF1',
-        'ENSG00000205038.PKHD1L1', 'ENSG00000205362.MT1A',
-        'ENSG00000205364.MT1M', 'ENSG00000205442.IZUMO3',
-        'ENSG00000205502.C2CD4B', 'ENSG00000205542.TMSB4X',
-        'ENSG00000206172.HBA1', 'ENSG00000211445.GPX3',
-        'ENSG00000211592.IGKC', 'ENSG00000213088.ACKR1',
-        'ENSG00000213145.CRIP1', 'ENSG00000213741.RPS29',
-        'ENSG00000215883.CYB5RL', 'ENSG00000221838.AP4M1',
-        'ENSG00000221869.CEBPD', 'ENSG00000223865.HLA-DPB1',
-        'ENSG00000227507.LTB', 'ENSG00000229117.RPL41',
-        'ENSG00000231389.HLA-DPA1', 'ENSG00000231500.RPS18',
-        'ENSG00000233927.RPS28', 'ENSG00000234745.HLA-B',
-        'ENSG00000239605.STPG4', 'ENSG00000240021.TEX35',
-        'ENSG00000240583.AQP1', 'ENSG00000241058.NSUN6',
-        'ENSG00000242265.PEG10', 'ENSG00000244694.PTCHD4',
-        'ENSG00000257987.TEX49', 'ENSG00000265972.TXNIP',
-        'ENSG00000266964.FXYD1', 'ENSG00000271503.CCL5',
-        'ENSG00000272398.CD24', 'ENSG00000276644.DACH1',
-        'ENSG00000284491.THSD8', 'ENSG00000288602.C8orf44-SGK3',
-        'ENSG00000291237.SOD2'], dtype='&lt;U31'))</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="40">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># store the integration in a temp df to sort the genes and the cells</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>_scanorama_df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    sparse.vstack(_out_scanorama[<span class="dv">1</span>]).toarray(),</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>_out_scanorama[<span class="dv">2</span>],</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>np.concatenate([adata_hvgs[adata_hvgs.obs.donor<span class="op">==</span>donor].copy().obs.index <span class="cf">for</span> donor <span class="kw">in</span> adata_hvgs.obs.donor.unique()])</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>_scanorama_df <span class="op">=</span> _scanorama_df.loc[adata_hvgs.obs.index, adata_hvgs.var.index]</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>_scanorama_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="40">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">ENSG00000187608.ISG15</th>
-<th data-quarto-table-cell-role="th">ENSG00000142599.RERE</th>
-<th data-quarto-table-cell-role="th">ENSG00000162493.PDPN</th>
-<th data-quarto-table-cell-role="th">ENSG00000188257.PLA2G2A</th>
-<th data-quarto-table-cell-role="th">ENSG00000117318.ID3</th>
-<th data-quarto-table-cell-role="th">ENSG00000142676.RPL11</th>
-<th data-quarto-table-cell-role="th">ENSG00000184454.NCMAP</th>
-<th data-quarto-table-cell-role="th">ENSG00000169442.CD52</th>
-<th data-quarto-table-cell-role="th">ENSG00000126709.IFI6</th>
-<th data-quarto-table-cell-role="th">ENSG00000162510.MATN1</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">ENSG00000205542.TMSB4X</th>
-<th data-quarto-table-cell-role="th">ENSG00000130066.SAT1</th>
-<th data-quarto-table-cell-role="th">ENSG00000102265.TIMP1</th>
-<th data-quarto-table-cell-role="th">ENSG00000102003.SYP</th>
-<th data-quarto-table-cell-role="th">ENSG00000102053.ZC3H12B</th>
-<th data-quarto-table-cell-role="th">ENSG00000198034.RPS4X</th>
-<th data-quarto-table-cell-role="th">ENSG00000102271.KLHL4</th>
-<th data-quarto-table-cell-role="th">ENSG00000198918.RPL39</th>
-<th data-quarto-table-cell-role="th">ENSG00000129682.FGF13</th>
-<th data-quarto-table-cell-role="th">ENSG00000147403.RPL10</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor1_fat.AAAGAACCACATACGT-1</td>
-<td>0.023583</td>
-<td>-0.002586</td>
-<td>-0.016485</td>
-<td>-0.003179</td>
-<td>-0.023821</td>
-<td>-0.008579</td>
-<td>-0.001793</td>
-<td>-0.002536</td>
-<td>0.010911</td>
-<td>-0.006346</td>
-<td>...</td>
-<td>-0.009052</td>
-<td>-0.029501</td>
-<td>-0.005599</td>
-<td>0.018711</td>
-<td>-0.002576</td>
-<td>-0.008925</td>
-<td>0.041081</td>
-<td>0.005903</td>
-<td>0.005757</td>
-<td>-0.003299</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor1_fat.AAAGGTAGTCCGGTCA-1</td>
-<td>0.002132</td>
-<td>-0.024135</td>
-<td>-0.040220</td>
-<td>-0.003728</td>
-<td>-0.048700</td>
-<td>-0.011451</td>
-<td>-0.001601</td>
-<td>-0.002038</td>
-<td>0.121134</td>
-<td>0.000624</td>
-<td>...</td>
-<td>-0.064797</td>
-<td>-0.015737</td>
-<td>0.018278</td>
-<td>0.002689</td>
-<td>-0.000674</td>
-<td>0.035611</td>
-<td>-0.032614</td>
-<td>-0.009935</td>
-<td>-0.000318</td>
-<td>0.023515</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor1_fat.AAAGGTATCTCTCTTC-1</td>
-<td>-0.004164</td>
-<td>-0.033796</td>
-<td>0.101305</td>
-<td>-0.003710</td>
-<td>0.009889</td>
-<td>0.019629</td>
-<td>-0.001690</td>
-<td>-0.002676</td>
-<td>-0.013008</td>
-<td>-0.000431</td>
-<td>...</td>
-<td>-0.014460</td>
-<td>-0.026077</td>
-<td>0.058380</td>
-<td>-0.003630</td>
-<td>-0.002396</td>
-<td>-0.001037</td>
-<td>-0.034941</td>
-<td>0.020651</td>
-<td>-0.000530</td>
-<td>0.005955</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor1_fat.AACCACACAGTGGCTC-1</td>
-<td>-0.046052</td>
-<td>-0.040209</td>
-<td>-0.019079</td>
-<td>-0.004313</td>
-<td>-0.019216</td>
-<td>0.002073</td>
-<td>-0.001743</td>
-<td>-0.002364</td>
-<td>-0.011888</td>
-<td>-0.000646</td>
-<td>...</td>
-<td>0.063457</td>
-<td>-0.014290</td>
-<td>-0.064956</td>
-<td>0.000575</td>
-<td>-0.000960</td>
-<td>0.001015</td>
-<td>-0.009173</td>
-<td>-0.000387</td>
-<td>-0.001733</td>
-<td>-0.019071</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor1_fat.AACGGGATCTGCTGAA-1</td>
-<td>0.001571</td>
-<td>-0.029553</td>
-<td>-0.044063</td>
-<td>-0.003765</td>
-<td>-0.025331</td>
-<td>-0.000908</td>
-<td>-0.001273</td>
-<td>-0.002982</td>
-<td>-0.012937</td>
-<td>-0.000433</td>
-<td>...</td>
-<td>0.011196</td>
-<td>-0.020491</td>
-<td>0.046722</td>
-<td>-0.003636</td>
-<td>-0.001308</td>
-<td>0.001381</td>
-<td>-0.040433</td>
-<td>0.046904</td>
-<td>-0.000008</td>
-<td>0.021838</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGGTTTCGACCAAT-1</td>
-<td>0.004535</td>
-<td>-0.025117</td>
-<td>-0.026448</td>
-<td>-0.003503</td>
-<td>0.039049</td>
-<td>0.003347</td>
-<td>-0.001132</td>
-<td>-0.001443</td>
-<td>-0.014741</td>
-<td>0.000356</td>
-<td>...</td>
-<td>0.037419</td>
-<td>0.064046</td>
-<td>-0.047390</td>
-<td>0.002937</td>
-<td>0.000538</td>
-<td>0.059523</td>
-<td>-0.028602</td>
-<td>0.040662</td>
-<td>-0.000181</td>
-<td>0.029061</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCCTACGG-1</td>
-<td>0.003428</td>
-<td>-0.033261</td>
-<td>-0.023717</td>
-<td>-0.003449</td>
-<td>-0.020331</td>
-<td>0.043332</td>
-<td>-0.001314</td>
-<td>-0.001652</td>
-<td>0.188004</td>
-<td>0.000222</td>
-<td>...</td>
-<td>0.025254</td>
-<td>-0.025854</td>
-<td>-0.047238</td>
-<td>-0.001205</td>
-<td>0.000409</td>
-<td>-0.100988</td>
-<td>-0.027576</td>
-<td>0.021205</td>
-<td>-0.000445</td>
-<td>0.026364</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCGCAGTC-1</td>
-<td>-0.005095</td>
-<td>-0.036264</td>
-<td>0.066045</td>
-<td>-0.001726</td>
-<td>-0.023987</td>
-<td>-0.038655</td>
-<td>-0.002289</td>
-<td>-0.001660</td>
-<td>-0.006253</td>
-<td>0.000633</td>
-<td>...</td>
-<td>-0.018624</td>
-<td>-0.037367</td>
-<td>-0.043669</td>
-<td>-0.008348</td>
-<td>0.000897</td>
-<td>-0.086843</td>
-<td>-0.014656</td>
-<td>-0.078321</td>
-<td>0.160810</td>
-<td>-0.075802</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTGGCGTAA-1</td>
-<td>0.002042</td>
-<td>-0.031914</td>
-<td>-0.026421</td>
-<td>-0.003509</td>
-<td>-0.014657</td>
-<td>0.030829</td>
-<td>-0.001336</td>
-<td>-0.000887</td>
-<td>-0.012903</td>
-<td>0.002270</td>
-<td>...</td>
-<td>-0.040158</td>
-<td>0.052507</td>
-<td>-0.002179</td>
-<td>0.001621</td>
-<td>-0.000805</td>
-<td>0.014169</td>
-<td>-0.029794</td>
-<td>0.015041</td>
-<td>-0.002628</td>
-<td>0.042965</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGTCGGCATTA-1</td>
-<td>0.002154</td>
-<td>0.020513</td>
-<td>-0.027130</td>
-<td>-0.003485</td>
-<td>0.018931</td>
-<td>-0.023319</td>
-<td>-0.000131</td>
-<td>-0.001552</td>
-<td>-0.009600</td>
-<td>0.005904</td>
-<td>...</td>
-<td>-0.004841</td>
-<td>0.050670</td>
-<td>0.010598</td>
-<td>-0.000437</td>
-<td>-0.000596</td>
-<td>-0.007359</td>
-<td>-0.016838</td>
-<td>0.015945</td>
-<td>0.116254</td>
-<td>0.005931</td>
-</tr>
-</tbody>
-</table>
-
-<p>21588 rows × 661 columns</p>
-</div>
-</div>
-</div>
-<div class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># store the scanorama layer in the adata object</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs.layers[<span class="st">"logcounts.scaled.scanorama"</span>] <span class="op">=</span> _scanorama_df.values</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> _scanorama_df, _out_scanorama</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="43">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA, neighbors and UMAP</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.scanorama.pca"</span>] <span class="op">=</span> sc.pp.pca(adata_hvgs.layers[<span class="st">"logcounts.scaled.scanorama"</span>], svd_solver<span class="op">=</span><span class="st">"arpack"</span>, n_comps<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(adata_hvgs, use_rep<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca"</span>, n_pcs<span class="op">=</span><span class="dv">100</span>, n_neighbors<span class="op">=</span><span class="dv">40</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors"</span>)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.scanorama.pca.neighbors.umap"</span>] <span class="op">=</span> sc.tl.umap(adata_hvgs, neighbors_key<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors"</span>, copy<span class="op">=</span><span class="va">True</span>).obsm[<span class="st">"X_umap"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="44">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors.umap"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
-  cax = scatter(</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-38-output-2.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-38-output-3.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="45">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors.umap"</span>, color<span class="op">=</span>adata_hvgs.var.index.intersection(markers.gene_ID), norm<span class="op">=</span>colors.LogNorm())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="46">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># harmony integration</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we're gonna use this one instead of scanorama</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>sc.external.pp.harmony_integrate(</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca"</span>, key<span class="op">=</span><span class="st">"donor"</span>,</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    adjusted_basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony"</span>, sigma<span class="op">=</span><span class="fl">1.</span> <span class="co">#hyperparameters: sigma.</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>2023-07-17 15:13:32,899 - harmonypy - INFO - Iteration 1 of 10
-2023-07-17 15:13:37,541 - harmonypy - INFO - Iteration 2 of 10
-2023-07-17 15:13:40,047 - harmonypy - INFO - Iteration 3 of 10
-2023-07-17 15:13:42,499 - harmonypy - INFO - Converged after 3 iterations</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="46">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>AnnData object with n_obs × n_vars = 21588 × 661
     obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes'
     var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts', 'selected'
-    uns: 'X_name', 'donor_colors', 'sequencing_run_colors', 'tissue_origin_colors', 'tissue_colors', 'logcounts.scaled.pca.neighbors', 'logcounts.scaled.scanorama.pca.neighbors'
-    obsm: 'logcounts.scaled.pca', 'logcounts.scaled.pca.neighbors.umap', 'logcounts.scaled.scanorama.pca', 'logcounts.scaled.scanorama.pca.neighbors.umap', 'logcounts.scaled.pca.harmony'
-    layers: 'logcounts', 'logcounts.scaled', 'logcounts.scaled.scanorama'
-    obsp: 'logcounts.scaled.pca.neighbors_distances', 'logcounts.scaled.pca.neighbors_connectivities', 'logcounts.scaled.scanorama.pca.neighbors_distances', 'logcounts.scaled.scanorama.pca.neighbors_connectivities'</code></pre>
+    uns: 'X_name', 'donor_colors', 'sequencing_run_colors', 'tissue_origin_colors', 'tissue_colors'
+    obsm: 'logcounts.scaled.pca', 'logcounts.scaled.pca.harmony'
+    layers: 'logcounts', 'logcounts.scaled'</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="47">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(adata_hvgs, use_rep<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony"</span>, n_pcs<span class="op">=</span><span class="dv">100</span>, n_neighbors<span class="op">=</span><span class="dv">40</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors"</span>)</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>] <span class="op">=</span> sc.tl.umap(adata_hvgs, neighbors_key<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors"</span>, copy<span class="op">=</span><span class="va">True</span>).obsm[<span class="st">"X_umap"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="48">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sc.pp.neighbors(adata_hvgs, use_rep<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony"</span>, n_pcs<span class="op">=</span><span class="dv">100</span>, n_neighbors<span class="op">=</span><span class="dv">40</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obsm[<span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>] <span class="op">=</span> sc.tl.umap(adata_hvgs, neighbors_key<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors"</span>, copy<span class="op">=</span><span class="va">True</span>).obsm[<span class="st">"X_umap"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+<pre><code>/anaconda3/envs/scampi/lib/python3.10/site-packages/umap/distances.py:1063: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @numba.jit()
+/anaconda3/envs/scampi/lib/python3.10/site-packages/umap/distances.py:1071: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @numba.jit()
+/anaconda3/envs/scampi/lib/python3.10/site-packages/umap/distances.py:1086: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @numba.jit()
+/anaconda3/envs/scampi/lib/python3.10/site-packages/umap/umap_.py:660: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @numba.jit()</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>, color<span class="op">=</span>[<span class="st">"donor"</span>, <span class="st">"sequencing_run"</span>, <span class="st">"tissue_origin"</span>, <span class="st">"tissue"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(
-/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-42-output-2.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-18-output-2.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-42-output-3.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-18-output-3.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="49">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># laiden clustering at different resolutions on the scanorama integration layer</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.025</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_0025res"</span>)</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.05</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_005res"</span>)</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.1</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_01res"</span>)</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.25</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_025res"</span>)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.5</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_05res"</span>)</span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="dv">1</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_1res"</span>)</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="49">
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># laiden clustering at different resolutions on the harmony integration layer</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.5</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.75</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 
 
@@ -2142,17 +1122,13 @@ Processing datasets (1, 4)</code></pre>
 <th data-quarto-table-cell-role="th">n_genes_by_counts</th>
 <th data-quarto-table-cell-role="th">log1p_n_genes_by_counts</th>
 <th data-quarto-table-cell-role="th">total_counts</th>
-<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">log1p_total_counts</th>
 <th data-quarto-table-cell-role="th">pct_counts_in_top_50_genes</th>
 <th data-quarto-table-cell-role="th">pct_counts_in_top_100_genes</th>
 <th data-quarto-table-cell-role="th">pct_counts_in_top_200_genes</th>
 <th data-quarto-table-cell-role="th">pct_counts_in_top_500_genes</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_0025res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_005res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_01res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_025res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_05res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_1res</th>
+<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res</th>
+<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res</th>
 </tr>
 </thead>
 <tbody>
@@ -2168,17 +1144,13 @@ Processing datasets (1, 4)</code></pre>
 <td>252</td>
 <td>5.533389</td>
 <td>1317.0</td>
-<td>...</td>
+<td>7.183871</td>
 <td>61.655277</td>
 <td>81.624905</td>
 <td>96.051632</td>
 <td>100.0</td>
 <td>0</td>
-<td>0</td>
 <td>1</td>
-<td>1</td>
-<td>2</td>
-<td>3</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">donor1_fat.AAAGGTAGTCCGGTCA-1</td>
@@ -2192,17 +1164,13 @@ Processing datasets (1, 4)</code></pre>
 <td>139</td>
 <td>4.941642</td>
 <td>1479.0</td>
-<td>...</td>
+<td>7.299797</td>
 <td>80.459770</td>
 <td>97.363083</td>
 <td>100.000000</td>
 <td>100.0</td>
 <td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>3</td>
-<td>5</td>
+<td>2</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">donor1_fat.AAAGGTATCTCTCTTC-1</td>
@@ -2216,17 +1184,13 @@ Processing datasets (1, 4)</code></pre>
 <td>196</td>
 <td>5.283204</td>
 <td>1806.0</td>
-<td>...</td>
+<td>7.499423</td>
 <td>72.369878</td>
 <td>91.251384</td>
 <td>100.000000</td>
 <td>100.0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
+<td>1</td>
 <td>3</td>
-<td>5</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">donor1_fat.AACCACACAGTGGCTC-1</td>
@@ -2240,16 +1204,12 @@ Processing datasets (1, 4)</code></pre>
 <td>254</td>
 <td>5.541264</td>
 <td>3110.0</td>
-<td>...</td>
+<td>8.042699</td>
 <td>66.495177</td>
 <td>88.938907</td>
 <td>98.263666</td>
 <td>100.0</td>
 <td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>4</td>
 <td>1</td>
 </tr>
 <tr class="odd">
@@ -2264,24 +1224,16 @@ Processing datasets (1, 4)</code></pre>
 <td>171</td>
 <td>5.147494</td>
 <td>1448.0</td>
-<td>...</td>
+<td>7.278629</td>
 <td>73.273481</td>
 <td>93.784530</td>
 <td>100.000000</td>
 <td>100.0</td>
 <td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>4</td>
-<td>1</td>
+<td>2</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
 <td>...</td>
 <td>...</td>
 <td>...</td>
@@ -2308,21 +1260,17 @@ Processing datasets (1, 4)</code></pre>
 <td>mixed</td>
 <td>abdomen</td>
 <td>4.0</td>
-<td>?</td>
+<td>M</td>
 <td>163</td>
 <td>5.099866</td>
 <td>618.0</td>
-<td>...</td>
+<td>6.428105</td>
 <td>67.475728</td>
 <td>89.320388</td>
 <td>100.000000</td>
 <td>100.0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
+<td>1</td>
 <td>3</td>
-<td>7</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCCTACGG-1</td>
@@ -2332,21 +1280,17 @@ Processing datasets (1, 4)</code></pre>
 <td>mixed</td>
 <td>abdomen</td>
 <td>4.0</td>
-<td>?</td>
+<td>M</td>
 <td>143</td>
 <td>4.969813</td>
 <td>305.0</td>
-<td>...</td>
+<td>5.723585</td>
 <td>63.934426</td>
 <td>85.901639</td>
 <td>100.000000</td>
 <td>100.0</td>
 <td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
+<td>2</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCGCAGTC-1</td>
@@ -2356,21 +1300,17 @@ Processing datasets (1, 4)</code></pre>
 <td>mixed</td>
 <td>abdomen</td>
 <td>4.0</td>
-<td>?</td>
+<td>M</td>
 <td>207</td>
 <td>5.337538</td>
 <td>471.0</td>
-<td>...</td>
+<td>6.156979</td>
 <td>53.715499</td>
 <td>76.433121</td>
 <td>98.513800</td>
 <td>100.0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>2</td>
-<td>8</td>
+<td>5</td>
+<td>7</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTGGCGTAA-1</td>
@@ -2380,21 +1320,17 @@ Processing datasets (1, 4)</code></pre>
 <td>mixed</td>
 <td>abdomen</td>
 <td>4.0</td>
-<td>?</td>
+<td>M</td>
 <td>142</td>
 <td>4.962845</td>
 <td>813.0</td>
-<td>...</td>
+<td>6.701960</td>
 <td>77.121771</td>
 <td>94.833948</td>
 <td>100.000000</td>
 <td>100.0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>4</td>
+<td>3</td>
 <td>8</td>
-<td>12</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGTCGGCATTA-1</td>
@@ -2404,434 +1340,58 @@ Processing datasets (1, 4)</code></pre>
 <td>mixed</td>
 <td>abdomen</td>
 <td>4.0</td>
-<td>?</td>
+<td>M</td>
 <td>216</td>
 <td>5.379897</td>
 <td>763.0</td>
-<td>...</td>
+<td>6.638568</td>
 <td>57.798165</td>
 <td>80.471822</td>
 <td>97.903014</td>
 <td>100.0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>4</td>
+<td>3</td>
 <td>6</td>
-<td>10</td>
 </tr>
 </tbody>
 </table>
 
-<p>21588 rows × 21 columns</p>
+<p>21588 rows × 17 columns</p>
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="50">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of clusters for each resolution</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co">#we're interested in selecting at least 10 clusters</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs.loc[:,adata_hvgs.obs.columns.<span class="bu">str</span>.match(<span class="st">"logcounts\.scaled\.scanorama\.pca\.neighbors_connectivities\.leiden_[0-9]+res$"</span>)].nunique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="50">
-<pre><code>logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_0025res     1
-logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_005res      1
-logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_01res       4
-logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_025res      6
-logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_05res      10
-logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_1res       16
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of clusters for each resolution</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs.loc[:,adata_hvgs.obs.columns.<span class="bu">str</span>.match(<span class="st">"logcounts\.scaled\.pca\.harmony\.neighbors_connectivities\.leiden_[0-9]+res$"</span>)].nunique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res     11
+logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res    19
 dtype: int64</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="65">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>sc.pl.heatmap(</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    adata_hvgs, var_names<span class="op">=</span>markers.gene_ID.unique(),</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    groupby<span class="op">=</span><span class="st">'logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_05res'</span>,</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    swap_axes<span class="op">=</span><span class="va">True</span>, layer<span class="op">=</span><span class="st">"logcounts"</span>, standard_scale<span class="op">=</span><span class="st">"var"</span></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-51-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="56">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors.umap"</span>, color<span class="op">=</span><span class="st">"logcounts.scaled.scanorama.pca.neighbors_connectivities.leiden_05res"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>, color<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+<pre><code>/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-52-output-2.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-21-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="57">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># laiden clustering at different resolutions on the harmony integration layer</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.025</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_0025res"</span>)</span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.05</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_005res"</span>)</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.1</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_01res"</span>)</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.15</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_015res"</span>)</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.2</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_02res"</span>)</span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.25</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_025res"</span>)</span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.3</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_03res"</span>)</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.4</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_04res"</span>)</span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="fl">.5</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res"</span>)</span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>sc.tl.leiden(adata_hvgs, obsp<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities"</span>, resolution<span class="op">=</span><span class="dv">1</span>, key_added<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res"</span>)</span>
-<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="57">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Sample</th>
-<th data-quarto-table-cell-role="th">Barcode</th>
-<th data-quarto-table-cell-role="th">donor</th>
-<th data-quarto-table-cell-role="th">tissue</th>
-<th data-quarto-table-cell-role="th">tissue_origin</th>
-<th data-quarto-table-cell-role="th">sequencing_run</th>
-<th data-quarto-table-cell-role="th">sex</th>
-<th data-quarto-table-cell-role="th">n_genes_by_counts</th>
-<th data-quarto-table-cell-role="th">log1p_n_genes_by_counts</th>
-<th data-quarto-table-cell-role="th">total_counts</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_0025res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_005res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_01res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_015res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_02res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_025res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_03res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_04res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res</th>
-<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor1_fat.AAAGAACCACATACGT-1</td>
-<td>donor1_fat</td>
-<td>AAAGAACCACATACGT-1</td>
-<td>1.0</td>
-<td>fat</td>
-<td>abdomen</td>
-<td>1.0</td>
-<td>F</td>
-<td>252</td>
-<td>5.533389</td>
-<td>1317.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>7</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor1_fat.AAAGGTAGTCCGGTCA-1</td>
-<td>donor1_fat</td>
-<td>AAAGGTAGTCCGGTCA-1</td>
-<td>1.0</td>
-<td>fat</td>
-<td>abdomen</td>
-<td>1.0</td>
-<td>F</td>
-<td>139</td>
-<td>4.941642</td>
-<td>1479.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor1_fat.AAAGGTATCTCTCTTC-1</td>
-<td>donor1_fat</td>
-<td>AAAGGTATCTCTCTTC-1</td>
-<td>1.0</td>
-<td>fat</td>
-<td>abdomen</td>
-<td>1.0</td>
-<td>F</td>
-<td>196</td>
-<td>5.283204</td>
-<td>1806.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor1_fat.AACCACACAGTGGCTC-1</td>
-<td>donor1_fat</td>
-<td>AACCACACAGTGGCTC-1</td>
-<td>1.0</td>
-<td>fat</td>
-<td>abdomen</td>
-<td>1.0</td>
-<td>F</td>
-<td>254</td>
-<td>5.541264</td>
-<td>3110.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor1_fat.AACGGGATCTGCTGAA-1</td>
-<td>donor1_fat</td>
-<td>AACGGGATCTGCTGAA-1</td>
-<td>1.0</td>
-<td>fat</td>
-<td>abdomen</td>
-<td>1.0</td>
-<td>F</td>
-<td>171</td>
-<td>5.147494</td>
-<td>1448.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGGTTTCGACCAAT-1</td>
-<td>donor5_recovery</td>
-<td>TTTGGTTTCGACCAAT-1</td>
-<td>5.0</td>
-<td>mixed</td>
-<td>abdomen</td>
-<td>4.0</td>
-<td>?</td>
-<td>163</td>
-<td>5.099866</td>
-<td>618.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCCTACGG-1</td>
-<td>donor5_recovery</td>
-<td>TTTGTTGGTCCTACGG-1</td>
-<td>5.0</td>
-<td>mixed</td>
-<td>abdomen</td>
-<td>4.0</td>
-<td>?</td>
-<td>143</td>
-<td>4.969813</td>
-<td>305.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCGCAGTC-1</td>
-<td>donor5_recovery</td>
-<td>TTTGTTGGTCGCAGTC-1</td>
-<td>5.0</td>
-<td>mixed</td>
-<td>abdomen</td>
-<td>4.0</td>
-<td>?</td>
-<td>207</td>
-<td>5.337538</td>
-<td>471.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>4</td>
-<td>2</td>
-<td>4</td>
-<td>4</td>
-<td>7</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTGGCGTAA-1</td>
-<td>donor5_recovery</td>
-<td>TTTGTTGGTGGCGTAA-1</td>
-<td>5.0</td>
-<td>mixed</td>
-<td>abdomen</td>
-<td>4.0</td>
-<td>?</td>
-<td>142</td>
-<td>4.962845</td>
-<td>813.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>9</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGTCGGCATTA-1</td>
-<td>donor5_recovery</td>
-<td>TTTGTTGTCGGCATTA-1</td>
-<td>5.0</td>
-<td>mixed</td>
-<td>abdomen</td>
-<td>4.0</td>
-<td>?</td>
-<td>216</td>
-<td>5.379897</td>
-<td>763.0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>8</td>
-</tr>
-</tbody>
-</table>
-
-<p>21588 rows × 31 columns</p>
-</div>
-</div>
-</div>
-<div class="cell" data-execution_count="58">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># number of clusters for each resolution</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#we're interested in selecting at least 10 clusters</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs.loc[:,adata_hvgs.obs.columns.<span class="bu">str</span>.match(<span class="st">"logcounts\.scaled\.pca\.harmony\.neighbors_connectivities\.leiden_[0-9]+res$"</span>)].nunique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="58">
-<pre><code>logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_0025res     1
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_005res      1
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_01res       1
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_015res      1
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_02res       3
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_025res      5
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_03res       5
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_04res       9
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res      11
-logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_1res       20
-dtype: int64</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="61">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>sc.pl.heatmap(</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>    adata_hvgs.copy(), var_names<span class="op">=</span>markers.gene_ID.unique(), dendrogram<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    groupby<span class="op">=</span><span class="st">'logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res'</span>,</span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    swap_axes<span class="op">=</span><span class="va">True</span>, layer<span class="op">=</span><span class="st">"logcounts"</span>, standard_scale<span class="op">=</span><span class="st">"var"</span>, figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">5</span>)</span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>WARNING: dendrogram data not found (using key=dendrogram_logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res). Running `sc.tl.dendrogram` with default parameters. For fine tuning it is recommended to run `sc.tl.dendrogram` independently.
-WARNING: You’re trying to run this on 661 dimensions of `.X`, if you really want this, set `use_rep='X'`.
-         Falling back to preprocessing with `sc.pp.pca` and default params.</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-59-output-2.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="62">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>, color<span class="op">=</span>adata_hvgs.var.index.intersection(markers.gene_ID), norm<span class="op">=</span>colors.LogNorm(vmin<span class="op">=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-60-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="63">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>, color<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sc.pl.embedding(adata_hvgs, basis<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors.umap"</span>, color<span class="op">=</span><span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/Users/daniele/miniconda3/envs/usefulenv/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:392: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
+<pre><code>/anaconda3/envs/scampi/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via 'c'. Parameters 'cmap' will be ignored
   cax = scatter(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="integration_n_clustering_files/figure-html/cell-61-output-2.png" class="img-fluid"></p>
+<p><img src="integration_n_clustering_files/figure-html/cell-22-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="64">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#save the adata object</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>adata_hvgs.write_h5ad(<span class="st">"../output/1.1-sce-after-contamination-removal-integration-clustering.h5ad"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#save the adata object</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>adata_hvgs.write_h5ad(<span class="st">"../output/1.1-sce-after-contamination-removal-integration-clustering.h5ad"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>lec_flow_push – clusters_markers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">lec_flow_push</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-preprocessing" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">preprocessing</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-preprocessing">    
+        <li>
+    <a class="dropdown-item" href="../code/convert_to_adata.html" rel="" target="">
+ <span class="dropdown-text">convert_to_adata.html</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../code/preprocessing_n_removal.html" rel="" target="">
+ <span class="dropdown-text">preprocessing_n_removal.html</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../code/integration_n_clustering.html" rel="" target="">
+ <span class="dropdown-text">integration_n_clustering.html</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../code/clusters_markers.html" rel="" target="">
+ <span class="dropdown-text">clusters_markers.html</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-differential-expression" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Differential expression</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-differential-expression">    
+        <li>
+    <a class="dropdown-item" href="../code/vis_de.html" rel="" target="">
+ <span class="dropdown-text">vis_de</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../code/pb_de.html" rel="" target="">
+ <span class="dropdown-text">pb_de</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-interactively" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Interactively</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-interactively">    
+        <li>
+    <a class="dropdown-item" href="../code/shinycell.html" rel="" target="">
+ <span class="dropdown-text">shinycell</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-exploratory-data-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Exploratory data analysis</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-exploratory-data-analysis">    
+        <li>
+    <a class="dropdown-item" href="../code/data_viz.html" rel="" target="">
+ <span class="dropdown-text">data_viz</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../code/valve_sub.html" rel="" target="">
+ <span class="dropdown-text">valve subgroups</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scanpy <span class="im">as</span> sc</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ###################################################### #</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># ################  I M P O R T A N T  ################# #</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ###################################################### #</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># the R conda envoirment to perform limma DEG analysis   #</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ###################################################### #</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>r_conda_env <span class="op">=</span> <span class="st">"condaEnv"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>adata_hvgs <span class="op">=</span> sc.read_h5ad(<span class="st">"../output/1.1-sce-after-contamination-removal-integration-clustering.h5ad"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>adata_hvgs.var.index <span class="op">=</span> adata_hvgs.var.index.<span class="bu">str</span>.split(<span class="st">"."</span>).<span class="bu">str</span>[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>adata_hvgs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>AnnData object with n_obs × n_vars = 21588 × 661
+    obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes', 'logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res', 'logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res'
+    var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts', 'selected'
+    uns: 'X_name', 'donor_colors', 'leiden', 'logcounts.scaled.pca.harmony.neighbors', 'logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res_colors', 'logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res_colors', 'sequencing_run_colors', 'tissue_colors', 'tissue_origin_colors'
+    obsm: 'logcounts.scaled.pca', 'logcounts.scaled.pca.harmony', 'logcounts.scaled.pca.harmony.neighbors.umap'
+    layers: 'logcounts', 'logcounts.scaled'
+    obsp: 'logcounts.scaled.pca.harmony.neighbors_connectivities', 'logcounts.scaled.pca.harmony.neighbors_distances'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#specifying the column containing the clustering information</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>clustering_label <span class="op">=</span> <span class="st">"logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs[clustering_label]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>donor1_fat.AAAGAACCACATACGT-1         0
+donor1_fat.AAAGGTAGTCCGGTCA-1         0
+donor1_fat.AAAGGTATCTCTCTTC-1         1
+donor1_fat.AACCACACAGTGGCTC-1         0
+donor1_fat.AACGGGATCTGCTGAA-1         0
+                                     ..
+donor5_recovery.TTTGGTTTCGACCAAT-1    1
+donor5_recovery.TTTGTTGGTCCTACGG-1    0
+donor5_recovery.TTTGTTGGTCGCAGTC-1    5
+donor5_recovery.TTTGTTGGTGGCGTAA-1    3
+donor5_recovery.TTTGTTGTCGGCATTA-1    3
+Name: logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res, Length: 21588, dtype: category
+Categories (11, object): ['0', '1', '2', '3', ..., '7', '8', '9', '10']</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This requires a couple of minutes</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># save the scaled log-norm conunts in a temp csv file</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>adata_hvgs.to_df(layer<span class="op">=</span><span class="st">"logcounts.scaled"</span>).T.to_csv(<span class="st">"_temp_count_file.csv"</span>, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># save the cluster factor in a temp file (csv as well)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs[clustering_label].astype(<span class="bu">str</span>).to_csv(<span class="st">"_temp_factor.csv"</span>, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># save the batch factor in a temp file (csv as well)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>adata_hvgs.obs[<span class="st">"donor"</span>].astype(<span class="bu">str</span>).to_csv(<span class="st">"_temp_batch.csv"</span>, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># create the limma_results folder</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">"rm -r limma_results"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">"mkdir limma_results"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># run the R script</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">"conda run -n </span><span class="sc">%s</span><span class="st"> Rscript limma_differential_expression.R"</span><span class="op">%</span>r_conda_env)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># delete the temp files</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">"rm _temp_count_file.csv"</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">"rm _temp_factor.csv"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>os.system(<span class="st">"rm _temp_batch.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+topTableF is obsolete and will be removed in a future version of limma. Please considering using topTable instead.
+</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the average (or median, to you) cluster log-expression</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>cluster_expression <span class="op">=</span> pd.concat([</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    pd.Series(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        np.array(adata_hvgs[adata_hvgs.obs[clustering_label]<span class="op">==</span>cluster].layers[<span class="st">"logcounts"</span>].mean(axis<span class="op">=</span><span class="dv">0</span>)).ravel(), <span class="co"># decomment for mean expresssion</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">#np.median(adata_hvgs[adata_hvgs.obs[clustering_label]==cluster].layers["logcounts"].toarray(), axis=0), # decomment for median expresssion</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        index<span class="op">=</span>adata_hvgs.var.index, name<span class="op">=</span>cluster</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> cluster <span class="kw">in</span> adata_hvgs.obs[clustering_label].cat.categories</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>], axis<span class="op">=</span><span class="dv">1</span>).stack().rename(<span class="st">"AveLogExpr"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>cluster_expression.index.names <span class="op">=</span> [<span class="st">"gene"</span>, <span class="st">"cluster"</span>]</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>cluster_expression</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>gene   cluster
+ISG15  0          0.133747
+       1          0.144939
+       2          0.132254
+       3          0.200549
+       4          0.196444
+                    ...   
+RPL10  6          4.439668
+       7          4.670093
+       8          4.797745
+       9          4.825947
+       10         4.923193
+Name: AveLogExpr, Length: 7271, dtype: float64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reading the results from limma's lmFit:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   F: overall moderated F-statistic</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   P.Value, adj.P.Val: from limma's lmFit</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   entropy: the Shannon entropy computed, for each gene, on the clusters expresion</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>limma_overall_results <span class="op">=</span> pd.read_csv(<span class="st">"limma_results/linear_model.csv"</span>, sep<span class="op">=</span><span class="st">" "</span>, index_col<span class="op">=</span><span class="dv">0</span>)[[<span class="st">"F"</span>, <span class="st">"P.Value"</span>, <span class="st">"adj.P.Val"</span>]]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>limma_overall_results <span class="op">=</span> limma_overall_results.join(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    cluster_expression.unstack().<span class="bu">apply</span>(stats.entropy, axis<span class="op">=</span><span class="dv">1</span>).rename(<span class="st">"entropy"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>limma_overall_results.index.rename(<span class="st">"gene"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>limma_overall_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">P.Value</th>
+<th data-quarto-table-cell-role="th">adj.P.Val</th>
+<th data-quarto-table-cell-role="th">entropy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RERE</td>
+<td>148.091436</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>2.339954</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ID3</td>
+<td>379.143638</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>2.285471</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPL11</td>
+<td>986.400379</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>2.370063</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">CD52</td>
+<td>112.473669</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.094504</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPS8</td>
+<td>868.130539</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>2.376817</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">PJVK</td>
+<td>3.139309</td>
+<td>0.000013</td>
+<td>0.000013</td>
+<td>1.939216</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ITIH3</td>
+<td>2.731077</td>
+<td>0.000151</td>
+<td>0.000151</td>
+<td>1.447063</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">HAMP</td>
+<td>2.182759</td>
+<td>0.003274</td>
+<td>0.003284</td>
+<td>1.763884</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">CGA</td>
+<td>1.634906</td>
+<td>0.047511</td>
+<td>0.047583</td>
+<td>1.423650</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">TEX49</td>
+<td>1.133994</td>
+<td>0.312922</td>
+<td>0.312922</td>
+<td>0.615322</td>
+</tr>
+</tbody>
+</table>
+
+<p>661 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reading the results from limma's lmFit, specific to each cluster</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   coef: coefficient from the linear model</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   AveLogScaleExpr: mean(log(scaled(geneExpression))), (-inf, +inf), zero centered</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   F: moderated F-statistic (cluster-specific)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   P.Value adj.P.Val: from lmFit test (cluster-speific)</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   AveLogExpr: mean(log(geneExpression)), interval in (0, +inf), not zero-centered</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>limma_results <span class="op">=</span> pd.concat(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        pd.read_csv(<span class="st">"limma_results/group</span><span class="sc">%s</span><span class="st">.csv"</span><span class="op">%</span>i, sep<span class="op">=</span><span class="st">" "</span>, index_col<span class="op">=</span><span class="dv">0</span>).assign(cluster<span class="op">=</span>i).set_index(<span class="st">"cluster"</span>, append<span class="op">=</span><span class="va">True</span>)<span class="op">\</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>            .rename(columns <span class="op">=</span> <span class="kw">lambda</span> colname: re.sub(<span class="st">"group[0-9]+"</span>, <span class="st">"coef"</span>, colname)).rename(columns<span class="op">=</span>{<span class="st">"AveExpr"</span>:<span class="st">"AveLogScaleExpr"</span>})</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> adata_hvgs.obs[clustering_label].cat.categories.astype(<span class="bu">str</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>limma_results.index.names <span class="op">=</span> [<span class="st">"gene"</span>, <span class="st">"cluster"</span>]</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>limma_results <span class="op">=</span> limma_results.join(cluster_expression) <span class="co">#AveLogExpr</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>limma_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">coef</th>
+<th data-quarto-table-cell-role="th">AveLogScaleExpr</th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">P.Value</th>
+<th data-quarto-table-cell-role="th">adj.P.Val</th>
+<th data-quarto-table-cell-role="th">AveLogExpr</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">gene</th>
+<th data-quarto-table-cell-role="th">cluster</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPL11</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.621540</td>
+<td>-3.106327e-16</td>
+<td>1.853735e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>3.944744</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">RPL32</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.577213</td>
+<td>4.976558e-16</td>
+<td>1.748737e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>4.281347</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPL29</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.644817</td>
+<td>-7.519618e-17</td>
+<td>1.955046e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>3.027835</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">FNDC3B</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>-0.648354</td>
+<td>-9.928134e-18</td>
+<td>1.635479e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.698285</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPS23</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.608984</td>
+<td>-1.416617e-16</td>
+<td>1.894574e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>4.055031</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">EGR1</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.005224</td>
+<td>6.854649e-17</td>
+<td>7.150909e-04</td>
+<td>0.978666</td>
+<td>0.984625</td>
+<td>0.569705</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">RELN</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>-0.004568</td>
+<td>2.374638e-17</td>
+<td>5.534042e-04</td>
+<td>0.981232</td>
+<td>0.985706</td>
+<td>0.804559</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">FAM25G</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.004157</td>
+<td>-3.302949e-18</td>
+<td>4.351351e-04</td>
+<td>0.983358</td>
+<td>0.986342</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">TNRC6A</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.000611</td>
+<td>7.032235e-17</td>
+<td>8.713536e-06</td>
+<td>0.997645</td>
+<td>0.999156</td>
+<td>0.471255</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">PIEZO2</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.000072</td>
+<td>-7.431829e-17</td>
+<td>1.348537e-07</td>
+<td>0.999707</td>
+<td>0.999707</td>
+<td>0.425953</td>
+</tr>
+</tbody>
+</table>
+
+<p>7271 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the cross-entropy for each gene, for eache cluster</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the lower the cross-entropy, the more likely a gene is a marker of a specific cluster</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cross_entropy_loss(y_true, y_prob, epsilon<span class="op">=</span><span class="fl">1e-12</span>):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clip predicted probabilities to prevent log(0) and log(1) cases</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    y_prob <span class="op">=</span> np.clip(y_prob, epsilon, <span class="fl">1.0</span> <span class="op">-</span> epsilon)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute cross-entropy loss</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> <span class="op">-</span>np.<span class="bu">sum</span>(y_true <span class="op">*</span> np.log(y_prob))</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>cluster_cross_entropy <span class="op">=</span> limma_results.AveLogExpr.unstack().<span class="bu">apply</span>(</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> gene_series: pd.Series(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        {cluster: cross_entropy_loss(np.eye(<span class="bu">len</span>(gene_series))[i], gene_series<span class="op">/</span>gene_series.<span class="bu">sum</span>())</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> i, cluster <span class="kw">in</span> <span class="bu">enumerate</span>(gene_series.index)}</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    ), axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>).stack().rename(<span class="st">"cross_enstropy_loss"</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>cluster_cross_entropy.index.names <span class="op">=</span> [<span class="st">"gene"</span>, <span class="st">"cluster"</span>]</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>cluster_cross_entropy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>gene    cluster
+ABCC4   0           3.722040
+        1           1.881407
+        10         27.631021
+        2           2.926712
+        3           4.145379
+                     ...    
+ZSWIM6  5           1.643516
+        6           2.215055
+        7           2.664269
+        8           2.709228
+        9           2.296434
+Name: cross_enstropy_loss, Length: 7271, dtype: float64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>limma_results <span class="op">=</span> limma_results.join(cluster_cross_entropy) <span class="co">#cross_enstropy_loss</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>limma_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">coef</th>
+<th data-quarto-table-cell-role="th">AveLogScaleExpr</th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">P.Value</th>
+<th data-quarto-table-cell-role="th">adj.P.Val</th>
+<th data-quarto-table-cell-role="th">AveLogExpr</th>
+<th data-quarto-table-cell-role="th">cross_enstropy_loss</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">gene</th>
+<th data-quarto-table-cell-role="th">cluster</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPL11</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.621540</td>
+<td>-3.106327e-16</td>
+<td>1.853735e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>3.944744</td>
+<td>2.341838</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">RPL32</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.577213</td>
+<td>4.976558e-16</td>
+<td>1.748737e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>4.281347</td>
+<td>2.349773</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPL29</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.644817</td>
+<td>-7.519618e-17</td>
+<td>1.955046e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>3.027835</td>
+<td>2.339591</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">FNDC3B</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>-0.648354</td>
+<td>-9.928134e-18</td>
+<td>1.635479e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.698285</td>
+<td>2.841968</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">RPS23</td>
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.608984</td>
+<td>-1.416617e-16</td>
+<td>1.894574e+03</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>4.055031</td>
+<td>2.339394</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">EGR1</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.005224</td>
+<td>6.854649e-17</td>
+<td>7.150909e-04</td>
+<td>0.978666</td>
+<td>0.984625</td>
+<td>0.569705</td>
+<td>2.462980</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">RELN</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>-0.004568</td>
+<td>2.374638e-17</td>
+<td>5.534042e-04</td>
+<td>0.981232</td>
+<td>0.985706</td>
+<td>0.804559</td>
+<td>2.212195</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">FAM25G</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.004157</td>
+<td>-3.302949e-18</td>
+<td>4.351351e-04</td>
+<td>0.983358</td>
+<td>0.986342</td>
+<td>0.000000</td>
+<td>27.631021</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">TNRC6A</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.000611</td>
+<td>7.032235e-17</td>
+<td>8.713536e-06</td>
+<td>0.997645</td>
+<td>0.999156</td>
+<td>0.471255</td>
+<td>2.479182</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">PIEZO2</td>
+<td data-quarto-table-cell-role="th">10</td>
+<td>0.000072</td>
+<td>-7.431829e-17</td>
+<td>1.348537e-07</td>
+<td>0.999707</td>
+<td>0.999707</td>
+<td>0.425953</td>
+<td>2.394570</td>
+</tr>
+</tbody>
+</table>
+
+<p>7271 rows × 7 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>limma_results.to_csv(<span class="st">"../output/2.0-clusters_DEG_analysis.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cluster_names_dict <span class="op">=</span> {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0"</span>: <span class="st">"4 precoll2"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1"</span>: <span class="st">"1 cap1"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2"</span>: <span class="st">"3 precoll1"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"3"</span>: <span class="st">"6 valves"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"4"</span>: <span class="st">"2 cap2"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"5"</span>: <span class="st">"5 coll"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"7"</span>: <span class="st">"7 prolif"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>reclustering_label <span class="op">=</span> <span class="st">'logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res'</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>valves_clusters_names_dict <span class="op">=</span> {</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"6"</span>:<span class="st">"valve 1"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"8"</span>:<span class="st">"valve 2"</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cell_types <span class="op">=</span> adata_hvgs.obs.loc[adata_hvgs.obs[clustering_label].isin(cluster_names_dict.keys()), clustering_label].replace(cluster_names_dict)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>cell_types <span class="op">=</span> cell_types.to_frame().join(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    adata_hvgs.obs.loc[</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        adata_hvgs.obs[reclustering_label].isin(valves_clusters_names_dict.keys()), reclustering_label</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    ].replace(valves_clusters_names_dict)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ensure that `{valve-1, valve-2}` is a partition of `6 valves`</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>cell_types.loc[cell_types[clustering_label]<span class="op">!=</span><span class="st">"6 valves"</span>, reclustering_label] <span class="op">=</span> np.nan</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>cell_types</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_05res</th>
+<th data-quarto-table-cell-role="th">logcounts.scaled.pca.harmony.neighbors_connectivities.leiden_075res</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">donor1_fat.AAAGAACCACATACGT-1</td>
+<td>4 precoll2</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">donor1_fat.AAAGGTAGTCCGGTCA-1</td>
+<td>4 precoll2</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">donor1_fat.AAAGGTATCTCTCTTC-1</td>
+<td>1 cap1</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">donor1_fat.AACCACACAGTGGCTC-1</td>
+<td>4 precoll2</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">donor1_fat.AACGGGATCTGCTGAA-1</td>
+<td>4 precoll2</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">donor5_recovery.TTTGGTTTCGACCAAT-1</td>
+<td>1 cap1</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCCTACGG-1</td>
+<td>4 precoll2</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTCGCAGTC-1</td>
+<td>5 coll</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGGTGGCGTAA-1</td>
+<td>6 valves</td>
+<td>valve 2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">donor5_recovery.TTTGTTGTCGGCATTA-1</td>
+<td>6 valves</td>
+<td>valve 1</td>
+</tr>
+</tbody>
+</table>
+
+<p>21215 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>adata <span class="op">=</span> sc.read_h5ad(<span class="st">"../output/0.2-sce-after-contamination-removal.h5ad"</span>)[cell_types.index] <span class="co"># read adata</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>adata.obs <span class="op">=</span> adata.obs[[<span class="st">'Sample'</span>, <span class="st">'Barcode'</span>, <span class="st">'donor'</span>, <span class="st">'tissue'</span>, <span class="st">'tissue_origin'</span>, <span class="st">'sequencing_run'</span>, <span class="st">'sex'</span>]].astype(<span class="bu">str</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>sc.pp.calculate_qc_metrics(adata, inplace<span class="op">=</span><span class="va">True</span>) <span class="co"># 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', etc...</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>adata.obs.loc[adata.obs.donor<span class="op">==</span><span class="st">"5.0"</span>, <span class="st">"sex"</span>] <span class="op">=</span> <span class="st">"M"</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>adata.obs.loc[adata.obs.donor<span class="op">==</span><span class="st">"7.0"</span>, <span class="st">"sex"</span>] <span class="op">=</span> <span class="st">"F"</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>adata.obs[[<span class="st">"celltype"</span>, <span class="st">"valve_subtype"</span>]] <span class="op">=</span> cell_types</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>adata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>AnnData object with n_obs × n_vars = 21215 × 18627
+    obs: 'Sample', 'Barcode', 'donor', 'tissue', 'tissue_origin', 'sequencing_run', 'sex', 'n_genes_by_counts', 'log1p_n_genes_by_counts', 'total_counts', 'log1p_total_counts', 'pct_counts_in_top_50_genes', 'pct_counts_in_top_100_genes', 'pct_counts_in_top_200_genes', 'pct_counts_in_top_500_genes', 'celltype', 'valve_subtype'
+    var: 'ID', 'Symbol', 'Type', 'n_cells_by_counts', 'mean_counts', 'log1p_mean_counts', 'pct_dropout_by_counts', 'total_counts', 'log1p_total_counts'
+    uns: 'X_name'
+    layers: 'logcounts'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>adata.write_h5ad(<span class="st">"../output/2.1-sce-after-contamination-removal-celltypes.h5ad"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

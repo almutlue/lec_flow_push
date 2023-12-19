@@ -2,46 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/about.html</loc>
-    <lastmod>2023-12-07T07:09:50.072Z</lastmod>
+    <lastmod>2023-12-19T15:44:31.418Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/valve_04_flow.html</loc>
-    <lastmod>2023-12-07T07:09:48.052Z</lastmod>
+    <lastmod>2023-12-19T15:44:30.334Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/data_viz.html</loc>
-    <lastmod>2023-12-07T07:08:39.633Z</lastmod>
+    <lastmod>2023-12-19T15:43:22.336Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/valve_sub.html</loc>
-    <lastmod>2023-12-07T07:08:01.910Z</lastmod>
+    <lastmod>2023-12-19T15:42:45.471Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/pb_de.html</loc>
-    <lastmod>2023-12-07T07:06:03.333Z</lastmod>
+    <lastmod>2023-12-19T15:40:50.729Z</lastmod>
+  </url>
+  <url>
+    <loc>https://almutlue.github.io/lec_flow_push/code/clusters_markers.html</loc>
+    <lastmod>2023-12-19T15:40:18.037Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/index.html</loc>
-    <lastmod>2023-12-07T07:05:28.568Z</lastmod>
+    <lastmod>2023-12-19T15:40:17.477Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/preprocessing_n_removal.html</loc>
-    <lastmod>2023-12-07T07:05:38.016Z</lastmod>
+    <lastmod>2023-12-19T15:40:26.589Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/shinycell.html</loc>
-    <lastmod>2023-12-07T07:07:21.152Z</lastmod>
+    <lastmod>2023-12-19T15:42:05.467Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/convert_to_adata.html</loc>
-    <lastmod>2023-12-07T07:08:02.270Z</lastmod>
+    <lastmod>2023-12-19T15:42:45.827Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/vis_de.html</loc>
-    <lastmod>2023-12-07T07:09:08.943Z</lastmod>
+    <lastmod>2023-12-19T15:43:50.985Z</lastmod>
   </url>
   <url>
     <loc>https://almutlue.github.io/lec_flow_push/code/integration_n_clustering.html</loc>
-    <lastmod>2023-12-07T07:09:49.876Z</lastmod>
+    <lastmod>2023-12-19T15:44:31.234Z</lastmod>
   </url>
 </urlset>
