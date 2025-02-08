@@ -209,6 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preamble" id="toc-preamble" class="nav-link" data-scroll-target="#preamble">Preamble</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   <li><a href="#pseudobulk-de" id="toc-pseudobulk-de" class="nav-link" data-scroll-target="#pseudobulk-de">Pseudobulk DE</a></li>
+  <li><a href="#pseudobulk-subcelltypes" id="toc-pseudobulk-subcelltypes" class="nav-link" data-scroll-target="#pseudobulk-subcelltypes">Pseudobulk subcelltypes</a></li>
   <li><a href="#pseudobulk-de-all" id="toc-pseudobulk-de-all" class="nav-link" data-scroll-target="#pseudobulk-de-all">Pseudobulk DE all</a></li>
   <li><a href="#differential-abundance" id="toc-differential-abundance" class="nav-link" data-scroll-target="#differential-abundance">Differential abundance</a></li>
   </ul></li>
@@ -271,14 +272,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valve"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"6 valve"</span>),</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"prolieferative"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"7 proliferative"</span>))</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># filter sample</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> sce[, <span class="sc">!</span>sce<span class="sc">$</span>donor <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2.0"</span>, <span class="st">"5.0"</span>)]</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>donor <span class="ot">&lt;-</span> sce<span class="sc">$</span>donor <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>tissue <span class="ot">&lt;-</span> sce<span class="sc">$</span>tissue <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># mean_expr</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>mean_expr_fat <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">logcounts</span>(sce[,sce<span class="sc">$</span>tissue <span class="sc">%in%</span> <span class="st">"fat"</span>]))</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>mean_expr_skin <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">logcounts</span>(sce[,sce<span class="sc">$</span>tissue <span class="sc">%in%</span> <span class="st">"skin"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># major celltypes</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>sub_cell_type <span class="ot">&lt;-</span> sce<span class="sc">$</span>cell_type_name <span class="sc">|&gt;</span> forcats<span class="sc">::</span><span class="fu">fct_collapse</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"capillary1"</span> <span class="ot">=</span> <span class="st">"1 capillary1"</span>, </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"capillary2"</span> <span class="ot">=</span> <span class="st">"2 capillary2"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"precollector1"</span> <span class="ot">=</span> <span class="st">"3 precollector1"</span>, </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"precollector2"</span> <span class="ot">=</span> <span class="st">"4 precollector2"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"collector"</span> <span class="ot">=</span> <span class="st">"5 collector"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"valve"</span> <span class="ot">=</span> <span class="st">"6 valve"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"prolieferative"</span> <span class="ot">=</span> <span class="st">"7 proliferative"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># filter sample</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> sce[, <span class="sc">!</span>sce<span class="sc">$</span>donor <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2.0"</span>, <span class="st">"5.0"</span>)]</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>donor <span class="ot">&lt;-</span> sce<span class="sc">$</span>donor <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>tissue <span class="ot">&lt;-</span> sce<span class="sc">$</span>tissue <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># mean_expr</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>mean_expr_fat <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">logcounts</span>(sce[,sce<span class="sc">$</span>tissue <span class="sc">%in%</span> <span class="st">"fat"</span>]))</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>mean_expr_skin <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(<span class="fu">logcounts</span>(sce[,sce<span class="sc">$</span>tissue <span class="sc">%in%</span> <span class="st">"skin"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="pseudobulk-de" class="level3">
@@ -308,104 +319,168 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summarizeTestsPerLabel</span>(is.de)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              -1     0   1    NA
-capillary    292  8851 156  9328
-collector      0  3565   0 15062
-precollector  30 10214  45  8338
-valve         30  6511  28 12058</code></pre>
+capillary    286  8886 127  9328
+collector      5  3559   1 15062
+precollector  23 10229  37  8338
+valve          9  6550  10 12058</code></pre>
+</div>
+</div>
+</section>
+<section id="pseudobulk-subcelltypes" class="level3">
+<h3 class="anchored" data-anchor-id="pseudobulk-subcelltypes">Pseudobulk subcelltypes</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>summed <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"sub_cell_type"</span>, <span class="st">"donor"</span>, <span class="st">"tissue"</span>)])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filter min cells</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>summed.filt <span class="ot">&lt;-</span> summed[,summed<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(summed.filt<span class="sc">$</span>tissue, summed.filt<span class="sc">$</span>sub_cell_type))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      
+       capillary1 capillary2 precollector1 precollector2 collector valve
+  fat           5          4             5             5         3     4
+  skin          5          5             5             5         4     5
+      
+       prolieferative
+  fat               0
+  skin              3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> donor <span class="sc">+</span> tissue, <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(summed.filt)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>de_sub.results <span class="ot">&lt;-</span> <span class="fu">pseudoBulkDGE</span>(summed.filt, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">label=</span>summed.filt<span class="sc">$</span>sub_cell_type,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">design=</span><span class="sc">~</span>donor <span class="sc">+</span> tissue,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">coef=</span><span class="st">"tissueskin"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">condition=</span>summed.filt<span class="sc">$</span>tissue </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>is.de <span class="ot">&lt;-</span> <span class="fu">decideTestsPerLabel</span>(de_sub.results, <span class="at">threshold=</span><span class="fl">0.05</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summarizeTestsPerLabel</span>(is.de)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              -1    0  1    NA
+capillary1    13 8529 23 10062
+capillary2    41 4795 40 13751
+collector      5 3559  1 15062
+precollector1 21 9317 23  9266
+precollector2  8 7692  8 10919
+valve          9 6550 10 12058</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#save results</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">names</span>(de_sub.results), <span class="cf">function</span>(nam){</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(de_sub.results[[nam]], <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"subcelltypes"</span>, <span class="fu">paste0</span>(<span class="st">"pb_"</span>, nam, <span class="st">".rds"</span>)))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(de_sub.results[[nam]], <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"subcelltypes"</span>, <span class="fu">paste0</span>(<span class="st">"pb_"</span>, nam, <span class="st">".csv"</span>)))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL</code></pre>
 </div>
 </div>
 </section>
 <section id="pseudobulk-de-all" class="level3">
 <h3 class="anchored" data-anchor-id="pseudobulk-de-all">Pseudobulk DE all</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"donor"</span>, <span class="st">"tissue"</span>)])</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filter min cells</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>summed_all.filt <span class="ot">&lt;-</span> summed_all[,summed_all<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(summed_all.filt<span class="sc">$</span>tissue)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>summed_all <span class="ot">&lt;-</span> <span class="fu">aggregateAcrossCells</span>(sce,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">id=</span><span class="fu">colData</span>(sce)[,<span class="fu">c</span>(<span class="st">"donor"</span>, <span class="st">"tissue"</span>)])</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filter min cells</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>summed_all.filt <span class="ot">&lt;-</span> summed_all[,summed_all<span class="sc">$</span>ncells <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(summed_all.filt<span class="sc">$</span>tissue)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  fat skin 
    5    5 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> donor <span class="sc">+</span> tissue, <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(summed_all.filt)))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(<span class="fu">counts</span>(summed_all.filt))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">filterByExpr</span>(dgl, design)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> dgl[keep, , keep.lib.sizes<span class="ot">=</span><span class="cn">FALSE</span>]</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> <span class="fu">calcNormFactors</span>(dgl)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> <span class="fu">estimateDisp</span>(dgl, design)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glmQLFit</span>(dgl, design)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>de <span class="ot">&lt;-</span> <span class="fu">glmQLFTest</span>(fit, <span class="at">coef=</span><span class="st">"tissueskin"</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>tt <span class="ot">&lt;-</span> <span class="fu">topTags</span>(de, <span class="at">n =</span> <span class="cn">Inf</span>)<span class="sc">$</span>table</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>full_gene_name <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tt)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>gene_symbol <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(tt))</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>meanExpr_fat <span class="ot">&lt;-</span> mean_expr_fat[<span class="fu">rownames</span>(tt)]</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>meanExpr_skin <span class="ot">&lt;-</span> mean_expr_skin[<span class="fu">rownames</span>(tt)]</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(tt, <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"pb_all.rds"</span>))</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(tt, <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"pb_all.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> donor <span class="sc">+</span> tissue, <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(summed_all.filt)))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(<span class="fu">counts</span>(summed_all.filt))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">filterByExpr</span>(dgl, design)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> dgl[keep, , keep.lib.sizes<span class="ot">=</span><span class="cn">FALSE</span>]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> <span class="fu">calcNormFactors</span>(dgl)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>dgl <span class="ot">&lt;-</span> <span class="fu">estimateDisp</span>(dgl, design)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">glmQLFit</span>(dgl, design)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>de <span class="ot">&lt;-</span> <span class="fu">glmQLFTest</span>(fit, <span class="at">coef=</span><span class="st">"tissueskin"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>tt <span class="ot">&lt;-</span> <span class="fu">topTags</span>(de, <span class="at">n =</span> <span class="cn">Inf</span>)<span class="sc">$</span>table</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>full_gene_name <span class="ot">&lt;-</span> <span class="fu">rownames</span>(tt)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>gene_symbol <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^.*</span><span class="sc">\\</span><span class="st">."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(tt))</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>meanExpr_fat <span class="ot">&lt;-</span> mean_expr_fat[<span class="fu">rownames</span>(tt)]</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>tt<span class="sc">$</span>meanExpr_skin <span class="ot">&lt;-</span> mean_expr_skin[<span class="fu">rownames</span>(tt)]</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(tt, <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"pb_all.rds"</span>))</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(tt, <span class="fu">file.path</span>(<span class="st">".."</span>, <span class="st">"out"</span>, <span class="st">"de"</span>, <span class="st">"pb_all.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="differential-abundance" class="level3">
 <h3 class="anchored" data-anchor-id="differential-abundance">Differential abundance</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sce_sub <span class="ot">&lt;-</span> sce[,<span class="sc">!</span>sce<span class="sc">$</span>Sample <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"donor5_recovery"</span>, <span class="st">"donor2_fat"</span>)]</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sce_sub<span class="sc">$</span>Sample <span class="ot">&lt;-</span> sce_sub<span class="sc">$</span>Sample <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>abundances <span class="ot">&lt;-</span> <span class="fu">table</span>(sce_sub<span class="sc">$</span>cell_type_name, sce_sub<span class="sc">$</span>Sample)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>abundances <span class="ot">&lt;-</span> <span class="fu">unclass</span>(abundances)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>extra.info <span class="ot">&lt;-</span> <span class="fu">colData</span>(sce_sub)[<span class="fu">match</span>(<span class="fu">colnames</span>(abundances), sce_sub<span class="sc">$</span>Sample),]</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>y.ab <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(abundances, <span class="at">samples=</span>extra.info)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span><span class="fu">factor</span>(donor) <span class="sc">+</span> <span class="fu">factor</span>(tissue), y.ab<span class="sc">$</span>samples)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>y.ab <span class="ot">&lt;-</span> <span class="fu">estimateDisp</span>(y.ab, design, <span class="at">trend=</span><span class="st">"none"</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y.ab<span class="sc">$</span>common.dispersion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sce_sub <span class="ot">&lt;-</span> sce[,<span class="sc">!</span>sce<span class="sc">$</span>Sample <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"donor5_recovery"</span>, <span class="st">"donor2_fat"</span>)]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sce_sub<span class="sc">$</span>Sample <span class="ot">&lt;-</span> sce_sub<span class="sc">$</span>Sample <span class="sc">|&gt;</span> <span class="fu">droplevels</span>()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>abundances <span class="ot">&lt;-</span> <span class="fu">table</span>(sce_sub<span class="sc">$</span>cell_type_name, sce_sub<span class="sc">$</span>Sample)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>abundances <span class="ot">&lt;-</span> <span class="fu">unclass</span>(abundances)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>extra.info <span class="ot">&lt;-</span> <span class="fu">colData</span>(sce_sub)[<span class="fu">match</span>(<span class="fu">colnames</span>(abundances), sce_sub<span class="sc">$</span>Sample),]</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>y.ab <span class="ot">&lt;-</span> <span class="fu">DGEList</span>(abundances, <span class="at">samples=</span>extra.info)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span><span class="fu">factor</span>(donor) <span class="sc">+</span> <span class="fu">factor</span>(tissue), y.ab<span class="sc">$</span>samples)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>y.ab <span class="ot">&lt;-</span> <span class="fu">estimateDisp</span>(y.ab, design, <span class="at">trend=</span><span class="st">"none"</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y.ab<span class="sc">$</span>common.dispersion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.2145  0.2145  0.2145  0.2145  0.2145  0.2145 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBCV</span>(y.ab, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBCV</span>(y.ab, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="pb_de_files/figure-html/diff abundance-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit.ab <span class="ot">&lt;-</span> <span class="fu">glmQLFit</span>(y.ab, design, <span class="at">robust=</span><span class="cn">TRUE</span>, <span class="at">abundance.trend=</span><span class="cn">FALSE</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.ab<span class="sc">$</span>var.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit.ab <span class="ot">&lt;-</span> <span class="fu">glmQLFit</span>(y.ab, design, <span class="at">robust=</span><span class="cn">TRUE</span>, <span class="at">abundance.trend=</span><span class="cn">FALSE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.ab<span class="sc">$</span>var.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Length  Class   Mode 
+     0   NULL   NULL </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.ab<span class="sc">$</span>df.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   1.13    1.13    1.13    1.13    1.13    1.13 </code></pre>
+  116.4   116.4   116.4   116.4   116.4   116.4 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.ab<span class="sc">$</span>df.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    Inf     Inf     Inf     Inf     Inf     Inf </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQLDisp</span>(fit.ab, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQLDisp</span>(fit.ab, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="pb_de_files/figure-html/diff abundance-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">glmQLFTest</span>(fit.ab, <span class="at">coef=</span><span class="fu">ncol</span>(design))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">decideTests</span>(res))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">glmQLFTest</span>(fit.ab, <span class="at">coef=</span><span class="fu">ncol</span>(design))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">decideTests</span>(res))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       factor(tissue)skin
-Down                    1
-NotSig                  6
+Down                    0
+NotSig                  7
 Up                      0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">topTags</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">topTags</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Coefficient:  factor(tissue)skin 
-                      logFC   logCPM           F      PValue       FDR
-5 collector     -1.67313387 15.71539 8.623966448 0.006566329 0.0459643
-1 capillary1     0.81379580 18.21660 2.916755948 0.098730096 0.3260354
-4 precollector2 -0.72111699 17.84314 2.310332539 0.139729459 0.3260354
-2 capillary2    -0.56425019 16.17506 1.237872565 0.275342782 0.4818499
-6 valve          0.31682058 16.22953 0.391258854 0.536703859 0.7513854
-7 proliferative  0.08138522 12.51469 0.012430808 0.912020407 0.9647903
-3 precollector1 -0.02076252 17.96845 0.001983791 0.964790283 0.9647903</code></pre>
+                      logFC   logCPM           F      PValue        FDR
+5 collector     -1.54832644 15.71539 8.369045854 0.007308034 0.05115624
+1 capillary1     0.83551888 18.21660 4.076859927 0.053141232 0.18599431
+4 precollector2 -0.71376716 17.84314 3.005225055 0.093996945 0.21932621
+2 capillary2    -0.59024211 16.17506 1.681977784 0.205247728 0.35918352
+6 valve          0.26641377 16.22953 0.343084253 0.562746204 0.78784469
+7 proliferative  0.16178462 12.51469 0.036642640 0.849575826 0.92980460
+3 precollector1 -0.03573641 17.96845 0.007900865 0.929804601 0.92980460</code></pre>
 </div>
 </div>
 
