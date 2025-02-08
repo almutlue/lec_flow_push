@@ -40,6 +40,16 @@ sce$ct_broad <- sce$cell_type_name |> forcats::fct_collapse(
   "valve" = c("6 valve"),
   "prolieferative" = c("7 proliferative"))
 
+# major celltypes
+sce$sub_cell_type <- sce$cell_type_name |> forcats::fct_collapse(
+  "capillary1" = "1 capillary1", 
+  "capillary2" = "2 capillary2",
+  "precollector1" = "3 precollector1", 
+  "precollector2" = "4 precollector2",
+  "collector" = "5 collector",
+  "valve" = "6 valve",
+  "prolieferative" = "7 proliferative")
+
 # filter sample
 sce <- sce[, !sce$donor %in% c("2.0", "5.0")]
 sce$donor <- sce$donor |> droplevels()
@@ -73,6 +83,37 @@ de.results <- pseudoBulkDGE(summed.filt,
 
 is.de <- decideTestsPerLabel(de.results, threshold=0.05)
 summarizeTestsPerLabel(is.de)
+```
+
+### Pseudobulk subcelltypes
+
+```{r}
+#| label: pb sub de
+
+summed <- aggregateAcrossCells(sce,
+                               id=colData(sce)[,c("sub_cell_type", "donor", "tissue")])
+# filter min cells
+summed.filt <- summed[,summed$ncells >= 10]
+print(table(summed.filt$tissue, summed.filt$sub_cell_type))
+  
+# de
+design <- model.matrix(~ donor + tissue, as.data.frame(colData(summed.filt)))
+de_sub.results <- pseudoBulkDGE(summed.filt, 
+    label=summed.filt$sub_cell_type,
+    design=~donor + tissue,
+    coef="tissueskin",
+    condition=summed.filt$tissue 
+)
+
+is.de <- decideTestsPerLabel(de_sub.results, threshold=0.05)
+summarizeTestsPerLabel(is.de)
+
+#save results
+lapply(names(de_sub.results), function(nam){
+  saveRDS(de_sub.results[[nam]], file.path("..", "out", "de", "subcelltypes", paste0("pb_", nam, ".rds")))
+  write.csv(de_sub.results[[nam]], file.path("..", "out", "de", "subcelltypes", paste0("pb_", nam, ".csv")))
+  })
+
 ```
 
 ### Pseudobulk DE all

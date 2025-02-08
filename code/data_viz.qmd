@@ -158,7 +158,6 @@ wrap_plots(list("before" = p2,
 ### Marker gene expression
 
 ::: panel-tabset
-
 ```{r}
 #| label: marker gen expr
 #| results: asis
@@ -182,5 +181,4 @@ for (. in names(marker_info)) {
 }
 
 ```
-
 :::
